@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, Text, Image, StatusBar } from 'react-native';
 import { Input } from 'react-native-elements';
 import { pxToDp } from '../../../utils/stylesKits';
 import validator from '../../../utils/validator';
 import request from '../../../utils/request';
-import { ACCOUNT_LOGIN } from '../../../utils/pathMap';
+import { ACCOUNT_LOGIN, ACCOUNT_VALIDATEVCODE } from '../../../utils/pathMap';
 import LGButton from '../../../components/LGButton';
 import VerifyCode from './components/VerifyCode';
+import Toast from '../../../utils/Toast';
 import styles from './style';
 
 const COUNT_DOWN_TIME = 60;
 
-const Login = () => {
+const Login = (props) => {
   const [phoneNum, setPhoneNum] = useState('15915912345'); // 手机号
   const [phoneValid, setPhoneValid] = useState(true); // 手机号合法性
   const [isLogin, setIsLogin] = useState(true); // 是否为登录显示
@@ -19,12 +20,47 @@ const Login = () => {
   const [btnText, setBtnText] = useState('获取验证码'); // 底部按钮文本
   const [isCountDown, setIsCountDown] = useState(false); //是否正在倒计时
 
+  const timeIdRef = useRef();
+
   const handleChange = (value) => {
     setPhoneNum(value);
   }
 
   const handleCodeChange = (value) => {
     setCodeValue(value);
+  }
+
+  // 验证码输入完成事件
+  const handleCodeSubmit = async () => {
+    // 1. 验证码校验 (前端校验长度即可)
+    if (codeValue.length !== 6) {
+      Toast.message('验证码不正确', 2000, 'center');
+      return;
+    }
+    /**
+     * 2. 将手机号和验证码一起给后端再次校验, 通过后返回新老用户标识
+     *  - 新用户 -> 完善信息界面
+     *  - 老用户 -> 首页
+     **/
+    const res = await request.post(ACCOUNT_VALIDATEVCODE, {
+      phone: phoneNum,
+      vcode: codeValue
+    });
+
+    if (res.code !== '10000') {
+      return;
+    }
+
+    if (res.data.isNew) {
+      // 新用户
+      props.navigation.navigate('UserInfo');
+    } else {
+      // 老用户
+      alert('首页')
+    }
+
+    // 清除计时器
+    timeIdRef.current && clearInterval(timeIdRef.current)
   }
 
   /**
@@ -41,8 +77,8 @@ const Login = () => {
      *  - 等待框
      *  - 自动关闭 -> axios 拦截器
      **/
-    const res = await request.post(ACCOUNT_LOGIN, { phone: phoneNum })
-    console.log(res,'ppp')
+    const res = await request.post(ACCOUNT_LOGIN, { phone: phoneNum });
+
     /**
      * 4. 切换验证码界面
      *  - 开启验证码定时器
@@ -62,11 +98,11 @@ const Login = () => {
     let seconds = COUNT_DOWN_TIME;
     setIsCountDown(true);
     setBtnText(`重新获取 ${seconds} s`);
-    let timeId = setInterval(() => {
+    timeIdRef.current = setInterval(() => {
       seconds--;
       setBtnText(`重新获取 ${seconds} s`);
       if (seconds === 0) {
-        clearInterval(timeId);
+        clearInterval(timeIdRef.current);
         setIsCountDown(false)
         setBtnText('重新获取');
       }
@@ -106,6 +142,7 @@ const Login = () => {
       <VerifyCode
         value={codeValue}
         onChange={handleCodeChange}
+        onSubmitEditing={handleCodeSubmit}
       />
     </>
   )
