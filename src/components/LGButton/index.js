@@ -9,10 +9,13 @@ export default (props) => {
     activeOpacity,
     onPress,
     style,
-    textStyle
+    textStyle,
+    ...restProps
   }  = props;
+
   return (
     <TouchableOpacity
+      {...restProps}
       activeOpacity={activeOpacity || 0.8}
       onPress={onPress}
     >

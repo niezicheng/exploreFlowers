@@ -9,16 +9,27 @@ import LGButton from '../../../components/LGButton';
 import VerifyCode from './components/VerifyCode';
 import styles from './style';
 
+const COUNT_DOWN_TIME = 60;
+
 const Login = () => {
   const [phoneNum, setPhoneNum] = useState('15915912345'); // 手机号
   const [phoneValid, setPhoneValid] = useState(true); // 手机号合法性
   const [isLogin, setIsLogin] = useState(true); // 是否为登录显示
   const [codeValue, setCodeValue] = useState(''); // 验证码的值
+  const [btnText, setBtnText] = useState('获取验证码'); // 底部按钮文本
+  const [isCountDown, setIsCountDown] = useState(false); //是否正在倒计时
 
   const handleChange = (value) => {
     setPhoneNum(value);
   }
 
+  const handleCodeChange = (value) => {
+    setCodeValue(value);
+  }
+
+  /**
+   * 注册、登录获取验证码
+   */
   const getVerifyCode = async () => {
     // 1. 号码校验
     const phoneValid = validator.validatePhone(phoneNum);
@@ -32,17 +43,40 @@ const Login = () => {
      **/
     const res = await request.post(ACCOUNT_LOGIN, { phone: phoneNum })
     console.log(res,'ppp')
-    // 4. 切换验证码界面
+    /**
+     * 4. 切换验证码界面
+     *  - 开启验证码定时器
+     **/
     if (res.code === '10000') {
       // 请求成功
       setIsLogin(false);
+      countDown();
     }
   }
 
-  const handleCodeChange = (value) => {
-    setCodeValue(value);
+  /**
+   * 获取按钮文本倒计时
+   */
+  const countDown = () => {
+    if (isCountDown) return;
+    let seconds = COUNT_DOWN_TIME;
+    setIsCountDown(true);
+    setBtnText(`重新获取 ${seconds} s`);
+    let timeId = setInterval(() => {
+      seconds--;
+      setBtnText(`重新获取 ${seconds} s`);
+      if (seconds === 0) {
+        clearInterval(timeId);
+        setIsCountDown(false)
+        setBtnText('重新获取');
+      }
+    }, 1000)
   }
 
+
+  /**
+   * 登录内容
+   */
   const renderLogin = () => (
     <>
       <Text style={[styles.labelTitle, { paddingLeft: pxToDp(5), }]}>
@@ -62,6 +96,9 @@ const Login = () => {
     </>
   )
 
+  /**
+   * 验证码内容
+   */
   const renderVerify = () => (
     <>
       <Text style={styles.labelTitle}>请输入6位验证码</Text>
@@ -92,10 +129,11 @@ const Login = () => {
       </View>
       <View style={{ alignItems: 'center' }}>
         <LGButton
+          disabled={isCountDown}
           onPress={getVerifyCode}
           style={styles.buttonWrap}
         >
-          {`${isLogin ? '获取验证码' : '重新获取 0 s'}`}
+          {btnText}
         </LGButton>
       </View>
     </>
