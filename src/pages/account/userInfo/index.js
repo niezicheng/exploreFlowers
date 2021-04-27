@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity} from 'react-native';
 import { Input } from 'react-native-elements';
 import DatePicker from 'react-native-datepicker';
+import Picker from 'react-native-picker';
 import Icon from '../../../components/Icon';
 import { formatDate } from '../../../utils';
 import { pxToDp } from '../../../utils/stylesKits';
+import Geo from '../../../utils/Geo';
+import CityJson from '../../../city.json';
 import styles from './style';
+import color from 'color';
 
-const SexArray = ['男', '女'];
+const sexArray = ['男', '女'];
 const MapSex = {
   '男': 'male',
   '女': 'female',
@@ -25,11 +29,41 @@ export default () => {
     address: '' // 详细地址
   })
 
+  useEffect(() => {
+    (async () => {
+      const res = await Geo.getCityByLocation();
+      console.log(res);
+      if (res) {
+        const address = res.regeocode.formatted_address;
+        const city = res.regeocode.addressComponent.city.replace('市', '');
+        setState({ ...state, address, city })
+      }
+    })();
+  }, [])
+
+  // 选择性别
   const handleChangeSex = (gender) => {
     setState( {...state, gender });
   }
 
-  const { gender, nickname, birthday } = state;
+  // 选择城市
+  const handlePickerCity = () => {
+    Picker.init({
+      pickerData: CityJson,
+      selectedValue: ['北京', '北京'],
+      wheelFlex: [1, 1, 1], // 显示省、市和区
+      pickerConfirmBtnText: '确定',
+      pickerCancelBtnText: '取消',
+      pickerTitleText: '选择城市',
+      onPickerConfirm: data => {
+        // data =  [广东，广州，天河]
+        setState({ ...state, city: data[1] })
+      }
+    });
+    Picker.show();
+  }
+
+  const { gender, nickname, birthday, city } = state;
 
   return (
     <View style={styles.container}>
@@ -37,7 +71,7 @@ export default () => {
       <Text style={styles.intro}>提升我的魅力</Text>
       <View style={styles.avatarWrap}>
         <View style={styles.avatarContainer}>
-          {SexArray.map((item, index) => (
+          {sexArray.map((item, index) => (
             <TouchableOpacity
               key={index}
               onPress={() => handleChangeSex(item)}
@@ -52,45 +86,54 @@ export default () => {
           ))}
         </View>
       </View>
-      <View>
         <Input
           value={nickname}
           placeholder='设置昵称'
+          inputStyle={{ color: '#86939e' }}
           onChangeText={(nickname) => setState({ ...state, nickname })}
         />
-      </View>
-      <View>
         <DatePicker
-          androidMode="spinner"
-          style={{ width: '100%' }}
-          date={birthday}
-          mode="date"
-          placeholder="设置生日"
-          format="YYYY-MM-DD"
-          minDate="1990-01-01"
-          maxDate={formatDate(new Date())}
-          confirmBtnText="确认"
-          cancelBtnText="取消"
-          customStyles={{
-            dateIcon: {
-              display: 'none',
-            },
-            dateInput: {
-              marginHorizontal: 10,
-              borderWidth: 0,
-              borderBottomWidth: pxToDp(1.1),
-              borderBottomColor: '#86939e',
-              alignItems: 'flex-start',
-              paddingLeft: pxToDp(4),
-            },
-            placeholderText: {
-              fontSize: pxToDp(15),
-              color: '#86939e',
-            }
-          }}
-          onDateChange={(birthday) => {setState({ ...state, birthday })}}
+        androidMode="spinner"
+        style={{ width: '100%' }}
+        date={birthday}
+        mode="date"
+        placeholder="设置生日"
+        format="YYYY-MM-DD"
+        minDate="1990-01-01"
+        maxDate={formatDate(new Date())}
+        confirmBtnText="确认"
+        cancelBtnText="取消"
+        customStyles={{
+          dateIcon: {
+            display: 'none',
+          },
+          dateInput: {
+            marginHorizontal: 10,
+            borderWidth: 0,
+            borderBottomWidth: pxToDp(1.1),
+            borderBottomColor: '#86939e',
+            alignItems: 'flex-start',
+            paddingLeft: pxToDp(4),
+          },
+          placeholderText: {
+            fontSize: pxToDp(15),
+            color: '#86939e',
+          }
+        }}
+        onDateChange={(birthday) => {setState({ ...state, birthday })}}
+      />
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={handlePickerCity}
+        style={{ marginTop: pxToDp(20) }}
+      >
+        <Input
+          disabled={true}
+          value={`当前定位: ${city}`}
+          placeholder='设置昵称'
+          inputStyle={{ color: '#333' }}
         />
-      </View>
+      </TouchableOpacity>
     </View>
   )
 }
