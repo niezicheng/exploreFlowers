@@ -5,6 +5,7 @@ import DatePicker from 'react-native-datepicker';
 import Picker from 'react-native-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import { Overlay } from 'teaset';
+import { inject, observer } from 'mobx-react';
 import Icon from '../../../components/Icon';
 import LGButton from '../../../components/LGButton';
 import { formatDate } from '../../../utils';
@@ -20,7 +21,7 @@ const MapSex = {
   '女': 'female',
 }
 
-export default () => {
+const UserInfo = (props) => {
   const [state, setState] = useState({
     nickname: '', // 姓名
     gender: '男', // 性别
@@ -218,3 +219,7 @@ export default () => {
     </View>
   )
 }
+
+// @inject("RootStore") // 注入用来获取全局数据的
+// @observer //  当全局发生改变了组件的重新渲染, 从而显示最新的数据
+export default inject('RootStore')(observer(UserInfo));

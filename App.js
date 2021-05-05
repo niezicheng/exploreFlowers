@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
+import { Provider} from 'mobx-react';
 import Nav from './src/nav';
 import Geo from './src/utils/Geo';
+import RootStore from './src/mobx';
 
 export default class App extends Component {
   state = {
@@ -18,7 +20,9 @@ export default class App extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        {this.state.isInitGeo ?  <Nav /> : null}
+        <Provider RootStore={RootStore}>
+          {this.state.isInitGeo ?  <Nav /> : null}
+        </Provider>
       </View>
     )
   }

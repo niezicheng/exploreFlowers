@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, Image, StatusBar } from 'react-native';
 import { Input } from 'react-native-elements';
+import { inject, observer } from 'mobx-react';
 import { pxToDp } from '../../../utils/stylesKits';
 import validator from '../../../utils/validator';
 import request from '../../../utils/request';
@@ -41,6 +42,7 @@ const Login = (props) => {
      * 2. 将手机号和验证码一起给后端再次校验, 通过后返回新老用户标识
      *  - 新用户 -> 完善信息界面
      *  - 老用户 -> 首页
+     * - 将用户数据存储全局的到 mobx 数据中
      **/
     const res = await request.post(ACCOUNT_VALIDATEVCODE, {
       phone: phoneNum,
@@ -51,11 +53,15 @@ const Login = (props) => {
       return;
     }
 
+    // 存储用户数据到 mobx 中
+    props.RootStore.setUserInfo(phoneNum, res.data.token, res.data.id);
+
     if (res.data.isNew) {
       // 新用户
       props.navigation.navigate('UserInfo');
     } else {
       // 老用户
+      // props.navigation.navigate('UserInfo');
       alert('首页')
     }
 
@@ -177,4 +183,6 @@ const Login = (props) => {
   )
 }
 
-export default Login;
+// @inject("RootStore") // 注入用来获取全局数据的
+// @observer //  当全局发生改变了组件的重新渲染, 从而显示最新的数据
+export default inject('RootStore')(observer(Login));
