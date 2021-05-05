@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity} from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { Input } from 'react-native-elements';
 import DatePicker from 'react-native-datepicker';
 import Picker from 'react-native-picker';
-// import ImagePicker from 'react-native-image-crop-picker';
+import ImagePicker from 'react-native-image-crop-picker';
+import { Overlay } from 'teaset';
 import Icon from '../../../components/Icon';
 import LGButton from '../../../components/LGButton';
 import { formatDate } from '../../../utils';
@@ -34,7 +35,7 @@ export default () => {
   useEffect(() => {
     (async () => {
       const res = await Geo.getCityByLocation();
-      console.log(res);
+      // console.log(res);
       if (res) {
         const address = res.regeocode.formatted_address;
         const city = res.regeocode.addressComponent.city.replace('市', '');
@@ -65,12 +66,15 @@ export default () => {
     Picker.show();
   }
 
+  let overlayViewRef = null
+
   // 设置头像
   const handleSetAvatar = async () => {
     /**
      * 1. 校验 昵称 生日 当前地址city
      * 2. 使用图片裁剪插件
      * 3. 将选择好的图片上传至后台
+     *  - rn 中显示动态图片需要进行配置
      * 4. 昵称 生日 当前地址city... 信息提交至后台完善信息填写
      * 5. 成功
      *  - 执行 极光注册 极光登录
@@ -83,11 +87,55 @@ export default () => {
       return;
     }
 
-    // const image = await ImagePicker.openPicker({
-    //   width: 300,
-    //   height: 400,
-    //   cropping: true
-    // })
+    // 获取选中后的图片
+    const image = await ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true
+    })
+
+    // 显示审核中效果
+    const overlayView = (
+      <Overlay.View
+        style={{ flex: 1, backgroundColor: '#000' }}
+        modal={true}
+        overlayOpacity={0}
+        ref={v => overlayViewRef = v}
+      >
+        <View
+          style={{
+            marginTop: pxToDp(30),
+            alignSelf: 'center',
+            width: pxToDp(334),
+            height: pxToDp(334),
+            position: 'relative',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Image
+            style={{
+              width: '100%',
+              height: '100%',
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              zIndex: 100
+            }}
+            source={require('../../../images/scan.gif')}
+          />
+          <Image
+            source={{ uri: image.path }}
+            style={{ width: '60%', height: '60%' }}
+          />
+        </View>
+      </Overlay.View>
+    );
+    Overlay.show(overlayView);
+
+    setTimeout(() => {
+      overlayViewRef.close();
+    }, 3000)
   }
 
   const { gender, nickname, birthday, city } = state;
