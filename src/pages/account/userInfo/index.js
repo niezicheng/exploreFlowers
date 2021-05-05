@@ -3,13 +3,15 @@ import { View, Text, TouchableOpacity} from 'react-native';
 import { Input } from 'react-native-elements';
 import DatePicker from 'react-native-datepicker';
 import Picker from 'react-native-picker';
+// import ImagePicker from 'react-native-image-crop-picker';
 import Icon from '../../../components/Icon';
+import LGButton from '../../../components/LGButton';
 import { formatDate } from '../../../utils';
 import { pxToDp } from '../../../utils/stylesKits';
 import Geo from '../../../utils/Geo';
 import CityJson from '../../../city.json';
+import Toast from '../../../utils/Toast';
 import styles from './style';
-import color from 'color';
 
 const sexArray = ['男', '女'];
 const MapSex = {
@@ -61,6 +63,31 @@ export default () => {
       }
     });
     Picker.show();
+  }
+
+  // 设置头像
+  const handleSetAvatar = async () => {
+    /**
+     * 1. 校验 昵称 生日 当前地址city
+     * 2. 使用图片裁剪插件
+     * 3. 将选择好的图片上传至后台
+     * 4. 昵称 生日 当前地址city... 信息提交至后台完善信息填写
+     * 5. 成功
+     *  - 执行 极光注册 极光登录
+     *  - 跳转至交友首页
+     */
+    const { nickname, birthday, city } = state;
+
+    if (!nickname || !birthday || !city) {
+      Toast.sad('昵称或者生日或者城市不合法!!!', 2000, 'center');
+      return;
+    }
+
+    // const image = await ImagePicker.openPicker({
+    //   width: 300,
+    //   height: 400,
+    //   cropping: true
+    // })
   }
 
   const { gender, nickname, birthday, city } = state;
@@ -134,6 +161,12 @@ export default () => {
           inputStyle={{ color: '#333' }}
         />
       </TouchableOpacity>
+      <LGButton
+        onPress={handleSetAvatar}
+        style={styles.selectAvatar}
+        >
+          设置头像
+        </LGButton>
     </View>
   )
 }

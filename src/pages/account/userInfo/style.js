@@ -38,5 +38,8 @@ export default StyleSheet.create({
   },
   activeAvatar: {
     backgroundColor: '#7d53ea',
+  },
+  selectAvatar: {
+    borderRadius: pxToDp(50),
   }
 })
