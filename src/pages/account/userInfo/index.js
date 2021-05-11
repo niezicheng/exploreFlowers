@@ -14,6 +14,8 @@ import Geo from '../../../utils/Geo';
 import CityJson from '../../../city.json';
 import Toast from '../../../utils/Toast';
 import styles from './style';
+import request from '../../../utils/request';
+import { ACCOUNT_CHECKHEADIMAGE } from '../../../utils/pathMap';
 
 const sexArray = ['男', '女'];
 const MapSex = {
@@ -68,6 +70,26 @@ const UserInfo = (props) => {
   }
 
   let overlayViewRef = null
+
+  const uploadHeadImage = (image) => {
+    // 构造参数发送到后台，完成头像上传
+    let formData = new FormData();
+    formData.append('headPhoto', {
+      // 本地图片地址
+      uri: image.path,
+      // 图片类型
+      type: image.mime,
+      // 图片名称 file:///store/com/pic/dsf/image.jpg
+      name: image.path.split('/').pop(),
+    });
+
+    // 执行头像上传
+    return request.privatePost(ACCOUNT_CHECKHEADIMAGE, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      }
+    })
+  }
 
   // 设置头像
   const handleSetAvatar = async () => {
@@ -134,9 +156,25 @@ const UserInfo = (props) => {
     );
     Overlay.show(overlayView);
 
+    // 目前请求报错 [Error: Network Error]
+    const res = await uploadHeadImage(image).catch((err) => {
+      // 隐藏请求中的 loading
+      Toast.hideLoading();
+      console.log(err);
+    })
+
+    console.log(res)
+
+    if (res === '10000') {
+      // 上传成功
+    } else {
+      // 上传失败
+    }
+
     setTimeout(() => {
       overlayViewRef.close();
     }, 3000)
+
   }
 
   const { gender, nickname, birthday, city } = state;
@@ -169,50 +207,50 @@ const UserInfo = (props) => {
           onChangeText={(nickname) => setState({ ...state, nickname })}
         />
         <DatePicker
-        androidMode="spinner"
-        style={{ width: '100%' }}
-        date={birthday}
-        mode="date"
-        placeholder="设置生日"
-        format="YYYY-MM-DD"
-        minDate="1990-01-01"
-        maxDate={formatDate(new Date())}
-        confirmBtnText="确认"
-        cancelBtnText="取消"
-        customStyles={{
-          dateIcon: {
-            display: 'none',
-          },
-          dateInput: {
-            marginHorizontal: 10,
-            borderWidth: 0,
-            borderBottomWidth: pxToDp(1.1),
-            borderBottomColor: '#86939e',
-            alignItems: 'flex-start',
-            paddingLeft: pxToDp(4),
-          },
-          placeholderText: {
-            fontSize: pxToDp(15),
-            color: '#86939e',
-          }
-        }}
-        onDateChange={(birthday) => {setState({ ...state, birthday })}}
-      />
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={handlePickerCity}
-        style={{ marginTop: pxToDp(20) }}
-      >
-        <Input
-          disabled={true}
-          value={`当前定位: ${city}`}
-          placeholder='设置昵称'
-          inputStyle={{ color: '#333' }}
+          androidMode="spinner"
+          style={{ width: '100%' }}
+          date={birthday}
+          mode="date"
+          placeholder="设置生日"
+          format="YYYY-MM-DD"
+          minDate="1990-01-01"
+          maxDate={formatDate(new Date())}
+          confirmBtnText="确认"
+          cancelBtnText="取消"
+          customStyles={{
+            dateIcon: {
+              display: 'none',
+            },
+            dateInput: {
+              marginHorizontal: 10,
+              borderWidth: 0,
+              borderBottomWidth: pxToDp(1.1),
+              borderBottomColor: '#86939e',
+              alignItems: 'flex-start',
+              paddingLeft: pxToDp(4),
+            },
+            placeholderText: {
+              fontSize: pxToDp(15),
+              color: '#86939e',
+            }
+          }}
+          onDateChange={(birthday) => {setState({ ...state, birthday })}}
         />
-      </TouchableOpacity>
-      <LGButton
-        onPress={handleSetAvatar}
-        style={styles.selectAvatar}
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={handlePickerCity}
+          style={{ marginTop: pxToDp(20) }}
+        >
+          <Input
+            disabled={true}
+            value={`当前定位: ${city}`}
+            placeholder='设置昵称'
+            inputStyle={{ color: '#333' }}
+          />
+        </TouchableOpacity>
+        <LGButton
+          onPress={handleSetAvatar}
+          style={styles.selectAvatar}
         >
           设置头像
         </LGButton>
