@@ -15,7 +15,7 @@ import CityJson from '../../../city.json';
 import Toast from '../../../utils/Toast';
 import styles from './style';
 import request from '../../../utils/request';
-import { ACCOUNT_CHECKHEADIMAGE } from '../../../utils/pathMap';
+import { ACCOUNT_CHECKHEADIMAGE, ACCOUNT_REGINFO } from '../../../utils/pathMap';
 
 const sexArray = ['男', '女'];
 const MapSex = {
@@ -42,7 +42,9 @@ const UserInfo = (props) => {
       if (res) {
         const address = res.regeocode.formatted_address;
         const city = res.regeocode.addressComponent.city.replace('市', '');
-        setState({ ...state, address, city })
+        const lng = res.regeocode.addressComponent.streetNumber.location.split(',')[0];
+        const lat = res.regeocode.addressComponent.streetNumber.location.split(',')[1];
+        setState({ ...state, address, city, lng, lat })
       }
     })();
   }, [])
@@ -163,17 +165,20 @@ const UserInfo = (props) => {
       console.log(err);
     })
 
-    console.log(res)
-
-    if (res === '10000') {
-      // 上传成功
-    } else {
-      // 上传失败
-    }
-
     setTimeout(() => {
       overlayViewRef.close();
     }, 3000)
+
+    if (!res || res.code !== '10000') {
+      // 上传失败
+      Toast.message('头像设置失败', 3000, 'center');
+      return;
+    }
+
+    // 完善个人信息
+    let params = state;
+    params.header = res.data && res.data.headImgPath;
+    const res1 = await request.privatePost(ACCOUNT_REGINFO, params);
 
   }
 
