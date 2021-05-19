@@ -135,6 +135,11 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true // 新增的
+        manifestPlaceholders = [
+            JPUSH_APPKEY: "0445e857891320462aedd470",	//在此替换你的APPKey
+            APP_CHANNEL: "developer-default"		//应用渠道号
+        ]
     }
     splits {
         abi {
@@ -192,6 +197,9 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+
+    compile project(':jmessage-react-plugin') // 新增的
+    compile project(':jcore-react-native')  // 新增的
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
