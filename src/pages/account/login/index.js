@@ -61,8 +61,7 @@ const Login = (props) => {
       props.navigation.navigate('UserInfo');
     } else {
       // 老用户
-      // props.navigation.navigate('UserInfo');
-      alert('首页')
+      alert('老用户，跳转交友页面')
     }
 
     // 清除计时器

@@ -16,6 +16,7 @@ import Toast from '../../../utils/Toast';
 import styles from './style';
 import request from '../../../utils/request';
 import { ACCOUNT_CHECKHEADIMAGE, ACCOUNT_REGINFO } from '../../../utils/pathMap';
+import JMessage from '../../../utils';
 
 const sexArray = ['男', '女'];
 const MapSex = {
@@ -73,6 +74,7 @@ const UserInfo = (props) => {
 
   let overlayViewRef = null
 
+  // 上传头像
   const uploadHeadImage = (image) => {
     // 构造参数发送到后台，完成头像上传
     let formData = new FormData();
@@ -91,6 +93,12 @@ const UserInfo = (props) => {
         "Content-Type": "multipart/form-data",
       }
     })
+  }
+
+  // 注册极光
+  const jgBusiness = (username, password) => {
+    // 在 App 中进行极光的初始化
+    return JMessage.register(username, password);
   }
 
   // 设置头像
@@ -165,9 +173,9 @@ const UserInfo = (props) => {
       console.log(err);
     })
 
-    setTimeout(() => {
-      overlayViewRef.close();
-    }, 3000)
+    // setTimeout(() => {
+    //   overlayViewRef.close();
+    // }, 3000)
 
     if (!res || res.code !== '10000') {
       // 上传失败
@@ -179,6 +187,26 @@ const UserInfo = (props) => {
     let params = state;
     params.header = res.data && res.data.headImgPath;
     const res1 = await request.privatePost(ACCOUNT_REGINFO, params);
+    // console.log(res1, 'res1-----')
+
+    if (res1.code !== '10000') {
+      // 完善信息失败
+      console.log(res1);
+      return;
+    }
+
+    // 注册极光 用户名：props.RootStore.userId，密码：暂时默认为用户手机号码
+    const res2 = await jgBusiness(props.RootStore.userId, props.RootStore.mobile);
+    // console.log(res2, 'res2-----')
+
+    // 隐藏头像审核弹框
+    overlayViewRef.close();
+    // 操作成功提示信息
+    Toast.smile('恭喜，操作成功!', 2000, 'center');
+    // 跳转 交友页面
+    setTimeout(() => {
+      alert('跳转交友页面');
+    }, 2000);
 
   }
 
