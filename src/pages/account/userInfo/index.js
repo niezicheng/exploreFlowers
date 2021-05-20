@@ -39,7 +39,6 @@ const UserInfo = (props) => {
   useEffect(() => {
     (async () => {
       const res = await Geo.getCityByLocation();
-      // console.log(res);
       if (res) {
         const address = res.regeocode.formatted_address;
         const city = res.regeocode.addressComponent.city.replace('市', '');
@@ -76,7 +75,6 @@ const UserInfo = (props) => {
 
   // 上传头像
   const uploadHeadImage = (image) => {
-    console.log(image.path, image.mime, image.path.split('/').pop(), 'opopopo------')
     // 构造参数发送到后台，完成头像上传
     let formData = new FormData();
     formData.append('headPhoto', {
@@ -98,7 +96,6 @@ const UserInfo = (props) => {
 
   // 注册极光
   const jgBusiness = (username, password) => {
-    console.log(1111111)
     // 在 App 中进行极光的初始化
     return JMessage.register(username, password);
   }
@@ -122,7 +119,6 @@ const UserInfo = (props) => {
       return;
     }
 
-    console.log(props.RootStore.userId, props.RootStore.mobile,'======p')
 
     // 获取选中后的图片
     const image = await ImagePicker.openPicker({
