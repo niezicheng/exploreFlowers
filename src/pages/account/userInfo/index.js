@@ -204,7 +204,7 @@ const UserInfo = (props) => {
     Toast.smile('恭喜，操作成功!', 2000, 'center');
     // 跳转 交友页面
     setTimeout(() => {
-      alert('跳转交友页面');
+      props.navigation.navigate('Tabbar');
     }, 2000);
 
   }

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, Image, StatusBar } from 'react-native';
+import { View, Text, Image, StatusBar, AsyncStorage } from 'react-native';
 import { Input } from 'react-native-elements';
 import { inject, observer } from 'mobx-react';
 import { pxToDp } from '../../../utils/stylesKits';
@@ -55,13 +55,19 @@ const Login = (props) => {
 
     // 存储用户数据到 mobx 中
     props.RootStore.setUserInfo(phoneNum, res.data.token, res.data.id);
+    // 存储用户数据到本地缓存中(永久存在)
+    AsyncStorage.setItem('userinfo', JSON.stringify({
+      mobile: phoneNum,
+      token: res.data.token,
+      userId: res.data.id
+    }));
 
     if (res.data.isNew) {
       // 新用户
       props.navigation.navigate('UserInfo');
     } else {
       // 老用户
-      alert('老用户，跳转交友页面')
+      props.navigation.navigate('Tabbar');
     }
 
     // 清除计时器
