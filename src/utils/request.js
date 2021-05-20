@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BASE_URI  } from './pathMap';
+import { BASE_URI } from './pathMap';
 import Toast from './Toast';
 import RootStore from '../mobx';
 

@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Login from './pages/account/login';
 import UserInfo from './pages/account/userInfo';
 import Demo from './pages/account/Demo';
+import Tabbar from './tabbar';
 
 const Stack = createStackNavigator();
 
@@ -11,7 +12,8 @@ const Stack = createStackNavigator();
 function Nav() {
   return (
     <NavigationContainer>
-      <Stack.Navigator headerMode="none" initialRouteName="Login">
+      <Stack.Navigator headerMode="none" initialRouteName="Tabbar">
+        <Stack.Screen name="Tabbar" component={Tabbar} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="UserInfo" component={UserInfo} />
         <Stack.Screen name="Demo" component={Demo} />
