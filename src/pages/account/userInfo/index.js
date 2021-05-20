@@ -16,7 +16,7 @@ import Toast from '../../../utils/Toast';
 import styles from './style';
 import request from '../../../utils/request';
 import { ACCOUNT_CHECKHEADIMAGE, ACCOUNT_REGINFO } from '../../../utils/pathMap';
-import JMessage from '../../../utils';
+import JMessage from '../../../utils/JMessage';
 
 const sexArray = ['男', '女'];
 const MapSex = {
@@ -76,6 +76,7 @@ const UserInfo = (props) => {
 
   // 上传头像
   const uploadHeadImage = (image) => {
+    console.log(image.path, image.mime, image.path.split('/').pop(), 'opopopo------')
     // 构造参数发送到后台，完成头像上传
     let formData = new FormData();
     formData.append('headPhoto', {
@@ -97,6 +98,7 @@ const UserInfo = (props) => {
 
   // 注册极光
   const jgBusiness = (username, password) => {
+    console.log(1111111)
     // 在 App 中进行极光的初始化
     return JMessage.register(username, password);
   }
@@ -119,6 +121,8 @@ const UserInfo = (props) => {
       Toast.sad('昵称或者生日或者城市不合法!!!', 2000, 'center');
       return;
     }
+
+    console.log(props.RootStore.userId, props.RootStore.mobile,'======p')
 
     // 获取选中后的图片
     const image = await ImagePicker.openPicker({
@@ -166,28 +170,28 @@ const UserInfo = (props) => {
     );
     Overlay.show(overlayView);
 
-    // 目前请求报错 [Error: Network Error]
-    const res = await uploadHeadImage(image).catch((err) => {
-      // 隐藏请求中的 loading
-      Toast.hideLoading();
-      console.log(err);
-    })
+    // 目前请求报错 [Error: Network Error](后端对应接口没有了)
+    // const res = await uploadHeadImage(image).catch((err) => {
+    //   // 隐藏请求中的 loading
+    //   Toast.hideLoading();
+    //   console.log(err);
 
-    // setTimeout(() => {
-    //   overlayViewRef.close();
-    // }, 3000)
+    //   // 头像上传失败，延迟 3s 关闭审核状态
+    //   setTimeout(() => {
+    //     overlayViewRef.close();
+    //   }, 3000)
+    // })
 
-    if (!res || res.code !== '10000') {
-      // 上传失败
-      Toast.message('头像设置失败', 3000, 'center');
-      return;
-    }
+    // if (!res || res.code !== '10000') {
+    //   // 上传失败
+    //   Toast.message('头像设置失败', 3000, 'center');
+    //   return;
+    // }
 
     // 完善个人信息
     let params = state;
-    params.header = res.data && res.data.headImgPath;
+    // params.header = res.data && res.data.headImgPath;
     const res1 = await request.privatePost(ACCOUNT_REGINFO, params);
-    // console.log(res1, 'res1-----')
 
     if (res1.code !== '10000') {
       // 完善信息失败
@@ -197,7 +201,6 @@ const UserInfo = (props) => {
 
     // 注册极光 用户名：props.RootStore.userId，密码：暂时默认为用户手机号码
     const res2 = await jgBusiness(props.RootStore.userId, props.RootStore.mobile);
-    // console.log(res2, 'res2-----')
 
     // 隐藏头像审核弹框
     overlayViewRef.close();
