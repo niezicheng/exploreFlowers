@@ -3,6 +3,7 @@ import { View, StatusBar } from 'react-native';
 import HeaderImageScrollView from 'react-native-image-header-scroll-view';
 import { pxToDp } from '../../utils/stylesKits';
 import Header from './components/header';
+import Visitors from './components/visitors';
 
 const Friend = () => {
   return (
@@ -21,7 +22,7 @@ const Friend = () => {
       )}
     >
       <View style={{ height: 1000 }}>
-        
+        <Visitors />
       </View>
     </HeaderImageScrollView>
   )

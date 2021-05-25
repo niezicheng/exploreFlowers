@@ -14,7 +14,7 @@ import styles from './style';
 const COUNT_DOWN_TIME = 60;
 
 const Login = (props) => {
-  const [phoneNum, setPhoneNum] = useState('15915912345'); // 手机号
+  const [phoneNum, setPhoneNum] = useState('18665711978'); // 手机号
   const [phoneValid, setPhoneValid] = useState(true); // 手机号合法性
   const [isLogin, setIsLogin] = useState(true); // 是否为登录显示
   const [codeValue, setCodeValue] = useState(''); // 验证码的值

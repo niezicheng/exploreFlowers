@@ -30,6 +30,21 @@ instance.interceptors.response.use(function (response) {
 export default {
   get: instance.get,
   post: instance.post,
+  // 自动带 token 的 get 请求
+  privateGet: (url, data = {}, options = {}) => {
+    const token = RootStore.token;
+    const headers = options.headers || {};
+
+
+    return instance.get(url, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        ...headers,
+      },
+      ...options,
+      params: data,
+    })
+  },
   // 自动带 token 的 post 请求
   privatePost: (url, data = {}, options = {}) => {
     const token = RootStore.token;
@@ -42,5 +57,5 @@ export default {
       },
       ...options
     })
-  }
+  },
 }
