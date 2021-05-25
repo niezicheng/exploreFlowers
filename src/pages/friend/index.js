@@ -4,6 +4,7 @@ import HeaderImageScrollView from 'react-native-image-header-scroll-view';
 import { pxToDp } from '../../utils/stylesKits';
 import Header from './components/header';
 import Visitors from './components/visitors';
+import PerfectPerson from './components/perfect';
 import Icon from '../../components/Icon';
 
 const Friend = () => {
@@ -24,7 +25,7 @@ const Friend = () => {
     >
       <View style={{ height: 1000 }}>
         <Visitors />
-        <Icon type='iconmaozi' size={50} />
+        <PerfectPerson />
       </View>
     </HeaderImageScrollView>
   )
