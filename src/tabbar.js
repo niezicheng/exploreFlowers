@@ -14,32 +14,32 @@ export default () => {
     {
       selected: 'friend',
       title: '交友',
-      renderIcon: () => <Icon type="friend" />,
-      renderSelectedIcon: () => <Icon type="selectedFriend" />,
+      renderIcon: () => <Icon svg type="friend" />,
+      renderSelectedIcon: () => <Icon svg type="selectedFriend" />,
       onPress: () => setSelectedTab('friend'),
       component: <Friend />
     },
     {
       selected: 'group',
       title: '圈子',
-      renderIcon: () => <Icon type="group" />,
-      renderSelectedIcon: () => <Icon type="selectedGroup" />,
+      renderIcon: () => <Icon svg type="group" />,
+      renderSelectedIcon: () => <Icon svg type="selectedGroup" />,
       onPress: () => setSelectedTab('group'),
       component: <Group />
     },
     {
       selected: 'message',
       title: '消息',
-      renderIcon: () => <Icon type="message" />,
-      renderSelectedIcon: () => <Icon type="selectedMessage" />,
+      renderIcon: () => <Icon svg type="message" />,
+      renderSelectedIcon: () => <Icon svg type="selectedMessage" />,
       onPress: () => setSelectedTab('message'),
       component: <Message />
     },
     {
       selected: 'my',
       title: '我的',
-      renderIcon: () => <Icon type="my" />,
-      renderSelectedIcon: () => <Icon type="selectedMy" />,
+      renderIcon: () => <Icon svg type="my" />,
+      renderSelectedIcon: () => <Icon svg type="selectedMy" />,
       onPress: () => setSelectedTab('my'),
       component: <My />
     },

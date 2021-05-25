@@ -23,7 +23,7 @@ const Header = () => {
       {iconMap.map((item, index) => (
         <TouchableOpacity key={index} style={styles.container}>
           <View style={[styles.iconWrap, { backgroundColor: item.bgColor }]}>
-            <Icon type={item.iconType} size={40} />
+            <Icon svg type={item.iconType} size={40} color='#fff' />
           </View>
           <Text style={styles.iconTitle}>{item.title}</Text>
         </TouchableOpacity>

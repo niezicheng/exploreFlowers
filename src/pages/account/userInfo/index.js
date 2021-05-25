@@ -227,7 +227,7 @@ const UserInfo = (props) => {
                 item === gender && styles.activeAvatar
               ]}
             >
-              <Icon type={MapSex[item]} size={40} />
+              <Icon svg type={MapSex[item]} size={40} />
             </TouchableOpacity>
           ))}
         </View>

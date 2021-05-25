@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, StatusBar } from 'react-native';
+import { View, Text, StatusBar } from 'react-native';
 import HeaderImageScrollView from 'react-native-image-header-scroll-view';
 import { pxToDp } from '../../utils/stylesKits';
 import Header from './components/header';
 import Visitors from './components/visitors';
+import Icon from '../../components/Icon';
 
 const Friend = () => {
   return (
@@ -23,6 +24,7 @@ const Friend = () => {
     >
       <View style={{ height: 1000 }}>
         <Visitors />
+        <Icon type='iconmaozi' size={50} />
       </View>
     </HeaderImageScrollView>
   )

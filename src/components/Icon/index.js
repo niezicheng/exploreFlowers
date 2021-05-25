@@ -1,22 +1,38 @@
 import React from 'react';
+import { Text } from 'react-native';
 import SvgUri from 'react-native-svg-uri';
-import sources from './fonts/iconSvg';
+import svgSources from './fonts/iconSvg';
+import sources from './fonts/icon';
 
 export default (props) => {
   const {
-    // svg = true,
+    svg = false,
     type,
     name,
     size = 22,
-    color = '#fff',
+    color,
+    style,
   } = props;
-
+<Text style={{ fontFamily: "iconfont", color: "red" }} >{'\ue82b'}</Text>
   return (
-    <SvgUri
-      svgXmlData={sources[name || type]}
-      width={size}
-      height={size}
-      fill={color}
-    />
+    svg ? (
+      <SvgUri
+        svgXmlData={svgSources[type || name]}
+        width={size}
+        height={size}
+        fill={color}
+      />
+    ) : (
+      <Text
+        style={{
+          ...style,
+          fontFamily: 'iconfont',
+          fontSize: size,
+          color: color,
+        }}
+      >
+        {sources[type || name]}
+      </Text>
+    )
   )
 }
