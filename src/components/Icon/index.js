@@ -8,6 +8,7 @@ export default (props) => {
     type,
     name,
     size = 22,
+    color = '#fff',
   } = props;
 
   return (
@@ -15,6 +16,7 @@ export default (props) => {
       svgXmlData={sources[name || type]}
       width={size}
       height={size}
+      fill={color}
     />
   )
 }
