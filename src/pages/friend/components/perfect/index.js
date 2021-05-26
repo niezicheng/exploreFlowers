@@ -22,7 +22,6 @@ const PerfectPerson = () => {
   useEffect(() => {
     (async () => {
       const res = await request.privateGet(FRIENDS_TODAYBEST)
-      console.log(res, 'pppppp')
       if (res.data) {
         setPerfect(res.data[0]);
       }

@@ -4,36 +4,24 @@ import { pxToDp } from '../../../../utils/stylesKits';
 export default StyleSheet.create({
   container: {
     flexDirection: 'row',
-  },
-  avatarWrap: {
-    position: 'relative',
+    alignItems: 'center',
+    padding: pxToDp(15),
+    borderBottomColor: '#eee',
+    borderBottomWidth: 1,
   },
   avatar: {
-    width: pxToDp(120),
-    height: pxToDp(120),
-  },
-  tag: {
-    width: pxToDp(80),
-    backgroundColor: '#b564bf',
-    borderRadius: 10,
-    position: 'absolute',
-    left: 0,
-    bottom: pxToDp(10),
-    textAlign: 'center',
-    color: '#fff',
-    paddingVertical: pxToDp(2),
+    width: pxToDp(50),
+    height: pxToDp(50),
+    borderRadius: pxToDp(25),
   },
   desc: {
     flexDirection: 'row',
     flex: 1,
-    marginVertical: pxToDp(2),
-    paddingRight: pxToDp(30),
-    backgroundColor: '#fff',
   },
   descLeft: {
     flex: 2,
     justifyContent: 'space-around',
-    alignItems: 'center',
+    marginLeft: pxToDp(30),
   },
   genderIcon: {
     marginHorizontal: pxToDp(2),
@@ -45,16 +33,16 @@ export default StyleSheet.create({
   },
   featValue: {
     color: '#fff',
-    fontSize: pxToDp(13),
+    fontSize: pxToDp(8),
     fontWeight: 'bold',
     position: 'absolute',
   },
   featValueDesc: {
-    fontSize: pxToDp(13),
+    fontSize: pxToDp(10),
     color: 'red',
   },
   textColor: {
     color: '#777',
     fontSize: pxToDp(12),
-  }
+  },
 })
