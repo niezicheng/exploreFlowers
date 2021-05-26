@@ -119,7 +119,6 @@ const UserInfo = (props) => {
       return;
     }
 
-
     // 获取选中后的图片
     const image = await ImagePicker.openPicker({
       width: 300,
