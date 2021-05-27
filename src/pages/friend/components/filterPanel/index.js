@@ -85,6 +85,7 @@ const FilterPanel = (props) => {
   // 提交数据信息
   const handleSubmit = () => {
     onConfirm(state);
+    onClose();
   }
 
   return (

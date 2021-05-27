@@ -44,16 +44,16 @@ const Friend = () => {
   }, [])
 
   // 获取用户列表数据信息
-  const getRecommends = async () => {
-    const res = await request.privateGet(FRIENDS_RECOMMEND, params);
+  const getRecommends = async (filterParams = {}) => {
+    const res = await request.privateGet(FRIENDS_RECOMMEND, { ...params, ...filterParams });
     if (res && res.data) {
       setRecommends(res.data);
     }
   }
 
   // 筛选弹框提交函数
-  const handleConfirm = (params) => {
-    console.log(params, 'params======')
+  const handleConfirm = (paramsData) => {
+    getRecommends(paramsData);
   }
 
   // 显示筛选弹框
