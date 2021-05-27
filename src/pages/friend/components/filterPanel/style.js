@@ -30,7 +30,7 @@ export default StyleSheet.create({
   },
   distance: {
     flexDirection: 'column',
-    paddingVertical: pxToDp(10),
+    paddingTop: pxToDp(10),
   },
   label: {
     color: '#777',
