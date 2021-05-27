@@ -5,7 +5,7 @@ import { pxToDp } from '../../utils/stylesKits';
 export default StyleSheet.create({
   container: {},
   imageBg: {
-    height: pxToDp(60),
+    height: pxToDp(50),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

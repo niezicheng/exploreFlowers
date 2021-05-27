@@ -3,6 +3,8 @@
  */
 export const BASE_URI = "http://157.122.54.189:9089";
 
+export const DEFAULT_IMG = 'http://157.122.54.189:9089/upload/13828459788.jpg';
+
 /**
  *  登录 获取验证码
  */

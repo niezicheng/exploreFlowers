@@ -13,20 +13,9 @@ import ItemCard from './components/itemCard';
 import FilterPanel from './components/filterPanel';
 import styles from './style';
 
-// id: 7
-// header: "/upload/162151615708018665711978.jpg"
-// nick_name: "admin"
-// gender: "男"
-// age: 23
-// marry: "单身"
-// xueli: "本科"
-// dist: 0
-// agediff: 0
-// fateValue: 40
-
 const Friend = () => {
   // 筛选接口获取数据参数
-  const [params, setParams] = useState({
+  const [params] = useState({
     page: 1,
     pagesize: 10,
     gender: '男',
