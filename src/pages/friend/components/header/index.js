@@ -14,7 +14,7 @@ const Header = () => {
     title: '搜附近',
     iconType: 'near',
     bgColor: '#2db3f8',
-    routerName: '',
+    routerName: 'Search',
   }, {
     title: '测灵魂',
     iconType: 'testSoul',
