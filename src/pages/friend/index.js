@@ -15,7 +15,7 @@ import styles from './style';
 
 const Friend = () => {
   // 筛选接口获取数据参数
-  const [params] = useState({
+  const [params, setParams] = useState({
     page: 1,
     pagesize: 10,
     gender: '男',
@@ -43,6 +43,7 @@ const Friend = () => {
   // 筛选弹框提交函数
   const handleConfirm = (paramsData) => {
     getRecommends(paramsData);
+    setParams({ ...params, ...paramsData });
   }
 
   // 显示筛选弹框

@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StatusBar, ImageBackground, Image, TouchableOpacity } from 'react-native';
+import { Overlay } from 'teaset';
 import request from '../../../utils/request';
 import { FRIENDS_SEARCH, BASE_URI } from '../../../utils/pathMap';
 import styles from './style';
 import { pxToDp, screenWidth, screenHeight } from '../../../utils/stylesKits';
-
-// uid: 7,
-// header: '/upload/13828459788.jpg',
-// nick_name: '瑶瑶公主',
-// dist: 0
+import Icon from '../../../components/Icon';
+import FilterPanel from './components/filterPanel';
 
 const WHMap = {
   'wh1': { width: pxToDp(70), height: pxToDp(100) },
@@ -31,8 +29,8 @@ const Search = () => {
   }, []);
 
   // 获取最近到数据信息
-  const getList = async () => {
-    const res = await request.privateGet(FRIENDS_SEARCH, params);
+  const getList = async (filterParams) => {
+    const res = await request.privateGet(FRIENDS_SEARCH, filterParams || params);
     if (res && res.data) {
       setList(res.data);
     }
@@ -65,6 +63,31 @@ const Search = () => {
     return distStr;
   }
 
+  // 筛选提交事件
+  const handleConfirm = (filterParams) => {
+    getList(filterParams);
+    setParams({ ...params, ...filterParams });
+  }
+
+  // 展示筛选弹框
+  const recommendFilterShow = () => {
+    let overlayRef = null;
+    let overlayView = (
+      <Overlay.View
+        modal={true}
+        overlayOpacity={0.3}
+        ref={v => overlayRef = v}
+        >
+        <FilterPanel
+          params={params}
+          onClose={() => overlayRef.close()}
+          onConfirm={handleConfirm}
+        />
+      </Overlay.View>
+    );
+    Overlay.show(overlayView);
+  };
+
   return (
     <ImageBackground
       source={require('../../../images/search.gif')}
@@ -74,6 +97,13 @@ const Search = () => {
         backgroundColor="transparent"
         translucent
       />
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={recommendFilterShow}
+        style={styles.filterWrap}
+      >
+        <Icon type='iconshaixuan' size={pxToDp(25)} color='#912375' />
+      </TouchableOpacity>
       {list.map((data, index) => {
         const whMap = WHMap[getWidthHeight(data.dist)];
         const tx = Math.random() * (screenWidth - whMap.width);
