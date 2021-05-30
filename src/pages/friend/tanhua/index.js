@@ -1,37 +1,76 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, ImageBackground, Image, TouchableOpacity } from 'react-native';
 import Swiper from "react-native-deck-swiper";
+import { Toast } from 'teaset';
 import NavHeader from '../../../components/NavHeader';
 import Icon from '../../../components/Icon';
 import request from '../../../utils/request';
-import { FRIENDS_CARDS, BASE_URI, DEFAULT_IMG } from '../../../utils/pathMap';
+import { FRIENDS_CARDS, BASE_URI, DEFAULT_IMG, FRIENDS_LIKE } from '../../../utils/pathMap';
 import styles from './style';
 
-// id: 8
-// header: "/upload/13828459782.png"
-// nick_name: "雾霭朦胧"
-// age: 21
-// gender: "女"
-// marry: "未婚"
-// xueli: "大专"
-// dist: 0
-
 const TanHua = () => {
-  const [params] = useState({
+  const [params, setParams] = useState({
     page: 1,
     pagesize: 5,
   });
+  const [totalPages, setTotalPages] = useState(5);
   const [cardList, setCardList] = useState([]);
+  const [selectedCardIndex, setSelectedCardIndex] = useState(0);
 
   useEffect(() => {
-    (async () => {
-      const res = await request.privateGet(FRIENDS_CARDS, params);
-      console.log(res, 'pppppp');
-      if (res && res.data) {
-        setCardList(res.data);
-      }
-    })();
+    getFriendsCards();
   }, [])
+
+  // 获取探花展示数据信息
+  const getFriendsCards = async (data) => {
+    const res = await request.privateGet(FRIENDS_CARDS, data || params);
+    if (res && res.data) {
+      setTotalPages(res.pages);
+      setCardList([ ...cardList, ...res.data ]);
+    }
+  };
+
+  let swiperRef = null;
+
+  // 用户喜欢或不喜欢点击事件
+  const handleLink = async (type) => {
+    /**
+     * 1. 通过 js 方式来 swiper 滑动
+     *  - swiper ref 实例方法 swipeLeft、swipeRight.
+     * 2. 根据滑动方向或参数来构造数据发送给后台
+     *  - 了解当前操作的图片索引
+     */
+    sendLink(type);
+    if (type === 'dislike') {
+      swiperRef.swipeLeft();
+    } else {
+      swiperRef.swipeRight()
+    }
+  }
+
+  // 发送喜欢或不喜欢信息
+  const sendLink = async (type) => {
+    const { id } = cardList[selectedCardIndex];
+    const url = FRIENDS_LIKE.replace(':id', id).replace(':type', type);
+    const res = await request.privateGet(url);
+
+    Toast.message(res.data, 1000, 'center');
+  }
+
+  // 滑动所有最后事件
+  const handleSwipedAll = async() => {
+    /**
+     * 1、是否有下一页数据
+     * 2、判断有下一页
+     */
+    const { page } = params;
+    if (page >= totalPages) {
+      Toast.message('没有更多数据信息了！！！');
+    } else {
+      getFriendsCards({ ...params, page: page + 1 });
+      setParams({ ...params,  page: page + 1 })
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -41,8 +80,10 @@ const TanHua = () => {
         imageStyle={{ height: '100%' }}
         style={styles.imageBg}
       >
-        {cardList && cardList.length ? (
+        {cardList && cardList[selectedCardIndex] ? (
           <Swiper
+            key={Date.now()}
+            ref={node => swiperRef = node}
             cards={cardList}
             renderCard={(card) => {
               return (
@@ -74,9 +115,11 @@ const TanHua = () => {
                 </View>
               )
             }}
-            onSwiped={(cardIndex) => {console.log(cardIndex)}}
-            onSwipedAll={() => {console.log('onSwipedAll')}}
-            cardIndex={0}
+            onSwiped={() => setSelectedCardIndex(selectedCardIndex + 1)}
+            onSwipedLeft={() => sendLink('dislike')}
+            onSwipedRight={() => sendLink('like')}
+            onSwipedAll={handleSwipedAll}
+            cardIndex={selectedCardIndex}
             cardVerticalMargin={0}
             backgroundColor='transparent'
             stackSize= {3}
@@ -86,14 +129,14 @@ const TanHua = () => {
       <View style={styles.hurtContainer}>
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => {}}
+          onPress={() => handleLink('dislike')}
           style={[styles.hurtIconWrap, styles.leftHurt]}
         >
           <Icon type='iconbuxihuan' size={40} color='#fff'  />
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => {}}
+          onPress={() => handleLink('like')}
           style={[styles.hurtIconWrap, styles.rightHurt]}
         >
           <Icon type='iconxihuan' size={40} color='#fff'  />
