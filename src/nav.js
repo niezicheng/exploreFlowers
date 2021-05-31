@@ -7,6 +7,7 @@ import UserInfo from './pages/account/userInfo';
 import Demo from './pages/account/Demo';
 import TanHua from './pages/friend/tanhua';
 import Search from './pages/friend/search';
+import Soul from './pages/friend/soul';
 import Tabbar from './tabbar';
 
 const Stack = createStackNavigator();
@@ -14,12 +15,13 @@ const Stack = createStackNavigator();
 // login user to: 15915954324 - 15915954324
 function Nav(props) {
   // 判断 mobx 中是否存在 token, 存在 -> tabbar, 不存在 -> Login
-  const initRouteName = props.RootStore.token ? 'Search' : 'Login';
+  const initRouteName = props.RootStore.token ? 'Soul' : 'Login';
 
   return (
     <NavigationContainer>
       <Stack.Navigator headerMode="none" initialRouteName={initRouteName}>
         <Stack.Screen name="Tabbar" component={Tabbar} />
+        <Stack.Screen name="Soul" component={Soul} />
         <Stack.Screen name="Search" component={Search} />
         <Stack.Screen name="TanHua" component={TanHua} />
         <Stack.Screen name="Login" component={Login} />

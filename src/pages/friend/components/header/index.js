@@ -19,7 +19,7 @@ const Header = () => {
     title: '测灵魂',
     iconType: 'testSoul',
     bgColor: '#ecc768',
-    routerName: '',
+    routerName: 'Soul',
   }];
 
   const navigation = useContext(NavigationContext);

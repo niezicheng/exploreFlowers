@@ -7,7 +7,6 @@ export default (props) => {
     children,
     activeOpacity,
     onPress,
-    style,
     textStyle,
     ...restProps
   }  = props;
@@ -22,7 +21,7 @@ export default (props) => {
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         colors={['#9b63cd', '#e0708c']}
-        style={[styles.container, style]}
+        style={styles.container}
       >
         <Text style={[styles.buttonText, textStyle]}>
           {children}
