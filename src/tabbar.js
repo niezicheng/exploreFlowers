@@ -1,14 +1,28 @@
-import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View } from 'react-native';
 import TabNavigator from 'react-native-tab-navigator';
+import { inject, observer } from 'mobx-react';
+import request from './utils/request';
+import { MY_INFO } from './utils/pathMap';
 import Icon from './components/Icon';
 import Friend from './pages/friend';
 import Group from './pages/group';
 import Message from './pages/message';
 import My from './pages/my';
 
-export default () => {
+const TabBar = (props) => {
   const [selectedTab, setSelectedTab] = useState('friend');
+
+  useEffect(() => {
+    (async () => {
+      // 获取用户信息
+      const res = await request.privateGet(MY_INFO);
+      if (res && res.data) {
+        // 将用户信息存入 mobx 中
+        props.UserStore.setUser(res.data);
+      }
+    })()
+  }, [])
 
   const pages = [
     {
@@ -66,3 +80,6 @@ export default () => {
     </View>
   )
 }
+
+export default inject('UserStore')(observer(TabBar));
+

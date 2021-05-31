@@ -16,7 +16,7 @@ const Stack = createStackNavigator();
 // login user to: 15915954324 - 15915954324
 function Nav(props) {
   // 判断 mobx 中是否存在 token, 存在 -> tabbar, 不存在 -> Login
-  const initRouteName = props.RootStore.token ? 'Soul' : 'Login';
+  const initRouteName = props.RootStore.token ? 'Tabbar' : 'Login';
 
   return (
     <NavigationContainer>

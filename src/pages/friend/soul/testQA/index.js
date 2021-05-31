@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ImageBackground } from 'react-native';
+import { inject, observer } from 'mobx-react';
 import request from '../../../../utils/request';
 import { FRIENDS_QUESTIONSECTION } from '../../../../utils/pathMap';
 import NavHeader from '../../../../components/NavHeader';
@@ -30,7 +31,6 @@ const mapTypeToUrl = {
   '高级': require('../../../../images/level3.png'),
 }
 
-
 const TestQA = (props) => {
   const { route: { params } } = props;
 
@@ -40,6 +40,7 @@ const TestQA = (props) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    console.log(props.UserStore.user, '==========')
     getTestQA();
   }, []);
 
@@ -74,4 +75,4 @@ const TestQA = (props) => {
   );
 }
 
-export default TestQA;
+export default inject('UserStore')(observer(TestQA));
