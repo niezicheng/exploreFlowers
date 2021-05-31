@@ -8,6 +8,7 @@ import Demo from './pages/account/Demo';
 import TanHua from './pages/friend/tanhua';
 import Search from './pages/friend/search';
 import Soul from './pages/friend/soul';
+import TestQA from './pages/friend/soul/testQA';
 import Tabbar from './tabbar';
 
 const Stack = createStackNavigator();
@@ -21,6 +22,7 @@ function Nav(props) {
     <NavigationContainer>
       <Stack.Navigator headerMode="none" initialRouteName={initRouteName}>
         <Stack.Screen name="Tabbar" component={Tabbar} />
+        <Stack.Screen name="TestQA" component={TestQA} />
         <Stack.Screen name="Soul" component={Soul} />
         <Stack.Screen name="Search" component={Search} />
         <Stack.Screen name="TanHua" component={TanHua} />

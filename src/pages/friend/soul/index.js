@@ -18,8 +18,9 @@ import styles from './style';
 // istested: true
 // islock: false
 
-const Soul = () => {
+const Soul = (props) => {
   const [questions, setQuestions] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     getQuestions()
@@ -29,8 +30,13 @@ const Soul = () => {
     const res = await request.privateGet(FRIENDS_QUESTIONS);
     if (res && res.data) {
       setQuestions(res.data);
-      console.log(res, 'opopop')
     }
+  }
+
+  // 开始测试
+  const handleStartTest = () => {
+    // 获取当前测试题等级相关数据, 跳转测试页面
+    props.navigation.navigate('TestQA', questions[currentIndex]);
   }
 
   return (
@@ -54,16 +60,16 @@ const Soul = () => {
                 </View>
               )
             }}
-            onSwiped={(cardIndex) => {console.log(cardIndex)}}
+            onSwiped={() => setCurrentIndex(currentIndex + 1)}
             onSwipedAll={() => {console.log('onSwipedAll')}}
-            cardIndex={0}
+            cardIndex={currentIndex}
             backgroundColor='transparent'
             cardVerticalMargin={0}
             stackSize= {1}
           />
         ) : null}
       </ImageBackground>
-      <Button style={styles.button}>开始测试</Button>
+      <Button onPress={handleStartTest} style={styles.button}>开始测试</Button>
     </View>
   );
 }
