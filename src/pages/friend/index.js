@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StatusBar, TouchableOpacity, Image } from 'react-native';
 import HeaderImageScrollView from 'react-native-image-header-scroll-view';
 import { Overlay } from 'teaset';
+import { NavigationContext } from '@react-navigation/native'
 import { pxToDp } from '../../utils/stylesKits';
 import request from '../../utils/request';
 import { FRIENDS_RECOMMEND } from '../../utils/pathMap';
@@ -27,6 +28,9 @@ const Friend = () => {
 
   // 推荐朋友数据
   const [recommends, setRecommends] = useState([]);
+
+  // 获取路由 navigation 对象
+  const navigation = useContext(NavigationContext);
 
   useEffect(() => {
     getRecommends();
@@ -93,10 +97,15 @@ const Friend = () => {
           </View>
         </View>
         {recommends.map((recommend, i) => (
-          <ItemCard
+          <TouchableOpacity
             key={i}
-            recommend={recommend}
-          />
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate('Detail', { id: recommend.id })}
+          >
+            <ItemCard
+              recommend={recommend}
+            />
+          </TouchableOpacity>
         ))}
       </>
     </HeaderImageScrollView>

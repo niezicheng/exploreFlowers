@@ -4,30 +4,25 @@ import { pxToDp } from '../../../../utils/stylesKits';
 export default StyleSheet.create({
   container: {
     flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: pxToDp(15),
+    paddingVertical: pxToDp(10),
+    paddingHorizontal: pxToDp(15),
     borderBottomColor: '#eee',
     borderBottomWidth: pxToDp(1),
-  },
-  avatar: {
-    width: pxToDp(50),
-    height: pxToDp(50),
-    borderRadius: pxToDp(25),
   },
   desc: {
     flexDirection: 'row',
     flex: 1,
   },
   descLeft: {
-    flex: 2,
-    justifyContent: 'space-around',
-    marginLeft: pxToDp(30),
+    justifyContent: 'space-between',
   },
   genderIcon: {
     marginHorizontal: pxToDp(2),
   },
   descRight: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
