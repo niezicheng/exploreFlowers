@@ -8,6 +8,7 @@ import request from '../../../utils/request';
 import { pxToDp } from '../../../utils/stylesKits';
 import { FRIENDS_PERSONALINFO, BASE_URI } from '../../../utils/pathMap';
 import UserInfoCard from './userInfoCard';
+import DynamicCard from './dynamicCard';
 import styles from './style';
 
 const Detail = (props) => {
@@ -90,6 +91,15 @@ const Detail = (props) => {
               </LinearGradient>
             </TouchableOpacity>
           </View>
+        </View>
+        <View style={styles.dynamicBody}>
+          {detail.trends.map((user, index) => (
+            <DynamicCard
+              key={index}
+              userDetail={detail}
+              userInfo={user}
+            />
+          ))}
         </View>
       </View>
     </HeaderImageScrollView>

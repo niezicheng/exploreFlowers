@@ -20,7 +20,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
   },
   genderIcon: {
-    marginHorizontal: pxToDp(2),
+    marginHorizontal: pxToDp(10),
   },
   descRight: {
     alignItems: 'center',
