@@ -98,6 +98,7 @@ const Detail = (props) => {
               key={index}
               userDetail={detail}
               userInfo={user}
+              currentUser={index}
             />
           ))}
         </View>

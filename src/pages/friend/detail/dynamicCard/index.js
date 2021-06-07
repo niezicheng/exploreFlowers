@@ -1,15 +1,29 @@
-import React from 'react';
-import { View, Image, Text } from 'react-native';
+import React, { useState } from 'react';
+import { TouchableOpacity } from 'react-native';
+import { View, Image, Text, Modal } from 'react-native';
+import ImageViewer from 'react-native-image-zoom-viewer';
 import Icon from '../../../../components/Icon';
 import { BASE_URI } from '../../../../utils/pathMap';
 import { pxToDp } from '../../../../utils/stylesKits';
 import styles from './style';
 
-const UserInfoCard = (props) => {
+const dynamicCard = (props) => {
   const {
     userDetail,
     userInfo,
+    currentUser,
   } = props;
+
+  const [visible, setVisible] = useState(false);
+  const [current, setCurrent] = useState(0);
+  const [imgUrls, setImgUrls] = useState([]);
+
+  const handleShowImg = (index) => {
+    const imgUrls = userDetail.trends[currentUser].album.map(item => ({ url: `${BASE_URI}${item.thum_img_path}` }))
+    setImgUrls(imgUrls);
+    setVisible(true);
+    setCurrent(index);
+  }
 
   return (
     <View style={styles.container}>
@@ -42,15 +56,26 @@ const UserInfoCard = (props) => {
       <Text style={styles.contentText}>{userInfo.content}</Text>
       <View style={styles.imgWrap}>
         {userInfo.album.map((imgScr, index) => (
-          <Image
+          <TouchableOpacity
             key={index}
-            source={{ uri: `${BASE_URI}${imgScr.thum_img_path}`}}
-            style={styles.dynamicImg}
-          />
+            onPress={() => handleShowImg(index)}
+          >
+            <Image
+              source={{ uri: `${BASE_URI}${imgScr.thum_img_path}`}}
+              style={styles.dynamicImg}
+            />
+          </TouchableOpacity>
         ))}
       </View>
+      <Modal visible={visible} transparent>
+        <ImageViewer
+          imageUrls={imgUrls}
+          index={current}
+          onClick={() => setVisible(false)}
+        />
+      </Modal>
     </View>
   );
 }
 
-export default UserInfoCard;
+export default dynamicCard;
