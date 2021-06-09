@@ -30,4 +30,26 @@ export default {
       }, resolve, reject)
     })
   },
+
+  /**
+   * 发动文本消息
+   * @param {string} username 接收信息的对象
+   * @param {string} text 发送信息的内容
+   * @param {object} extras 附带的一些参数
+   * @returns Promise
+   */
+  sendTextMessage(username, text, extras = {}) {
+    return new Promise((resolve, reject) => {
+      // 消息类型 单个 即可
+      const type = 'single';
+
+      JMessage.sendTextMessage({
+        type,
+        username,
+        // appKey: 'appKye',
+        text,
+        extras,
+      }, resolve, reject)
+    })
+  }
 }

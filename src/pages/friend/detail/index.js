@@ -3,6 +3,7 @@ import { View, Image, Text, TouchableOpacity } from 'react-native';
 import HeaderImageScrollView from 'react-native-image-header-scroll-view';
 import { Carousel } from 'teaset';
 import LinearGradient from 'react-native-linear-gradient';
+import { inject, observer } from 'mobx-react';
 import Icon from '../../../components/Icon';
 import request from '../../../utils/request';
 import { pxToDp } from '../../../utils/stylesKits';
@@ -10,6 +11,8 @@ import { FRIENDS_PERSONALINFO, BASE_URI } from '../../../utils/pathMap';
 import UserInfoCard from './userInfoCard';
 import DynamicCard from './dynamicCard';
 import styles from './style';
+import JMessage from '../../../utils/JMessage';
+import Toast from '../../../utils/Toast';
 
 const Detail = (props) => {
   const { route } = props;
@@ -67,6 +70,20 @@ const Detail = (props) => {
     }
   }
 
+  // 喜欢按钮点击事件
+  const handleLike = async () => {
+    console.log(11111111, detail.guid, props.UserStore.user.mobile)
+    // 接受消息人 => 正在被浏览的用户
+    const guid = detail.guid;
+    // 文本内容 => 当前登录用户手机号 + 喜欢了你
+    const text = `${props.UserStore.user.mobile} 喜欢了你`;
+    // 额外数据 => 当前登录用户信息
+    const extras = { user: JSON.stringify(detail) }
+    // const res = await JMessage.sendTextMessage(guid, text, extras);
+    // console.log(res);
+    Toast.smile('喜欢成功', 1000, 'center');
+  }
+
   if (!detail.silder) {
     return null;
   }
@@ -116,6 +133,7 @@ const Detail = (props) => {
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
+              onPress={handleLike}
             >
               <LinearGradient
                 colors={['#6d47f8', '#e56b7f']}
@@ -151,4 +169,4 @@ const Detail = (props) => {
   );
 }
 
-export default Detail;
+export default inject('UserStore')(observer(Detail));
