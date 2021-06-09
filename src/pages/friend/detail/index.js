@@ -31,7 +31,6 @@ const Detail = (props) => {
     const res = await request.privateGet(url, data || params);
 
     if (res && res.data) {
-      console.log(res)
       setDetail(res.data);
       setTotalPages(res.pages);
       setIsLoading(false);
@@ -98,7 +97,7 @@ const Detail = (props) => {
           <View style={styles.dynamicTopLeft}>
             <Text style={styles.title}>动态</Text>
             <View style={styles.messageWrap}>
-              <Text style={styles.messageNum}>3</Text>
+              <Text style={styles.messageNum}>{trends.length}</Text>
             </View>
           </View>
           <View style={styles.dynamicTopRight}>

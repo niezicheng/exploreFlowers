@@ -28,6 +28,10 @@ const Friend = () => {
 
   // 推荐朋友数据
   const [recommends, setRecommends] = useState([]);
+  // 总的页面数
+  const [totalPages, setTotalPages] = useState(4);
+  // 当前是否正在请求数据(滚动事件分页中节流操作)
+  const [isLoading, setIsLoading] = useState(false);
 
   // 获取路由 navigation 对象
   const navigation = useContext(NavigationContext);
@@ -40,7 +44,9 @@ const Friend = () => {
   const getRecommends = async (filterParams = {}) => {
     const res = await request.privateGet(FRIENDS_RECOMMEND, { ...params, ...filterParams });
     if (res && res.data) {
-      setRecommends(res.data);
+      setRecommends([...recommends, ...res.data]);
+      // setTotalPages(4) // res.pages 后端目前一直返回 1, 总数量 res.count 也是一直返回 5
+      setIsLoading(false);
     }
   }
 
@@ -70,8 +76,37 @@ const Friend = () => {
     Overlay.show(overlayView);
   }
 
+  // 滚动加载分页
+  const handleScroll = ({ nativeEvent }) => {
+    const {
+      contentSize,
+      layoutMeasurement,
+      contentOffset,
+    } = nativeEvent;
+
+    /**
+     * 滚动条触底
+     * contentSize.height 滚动列表的高度
+     * layoutMeasurement.height 可视区域的高度(可以看作屏幕的高度)
+     * contentOffset.y 滚动条距离顶部的距离
+     */
+    const isReachBottom = (contentSize.height - layoutMeasurement.height - contentOffset.y) < 10;
+
+    const hasMore = params.page < totalPages;
+    if (isReachBottom && hasMore && !isLoading) {
+      const data = {
+        ...params,
+        page: params.page + 1,
+      }
+      setIsLoading(true);
+      setParams(data);
+      getRecommends(data);
+    }
+  }
+
   return (
     <HeaderImageScrollView
+      onScroll={handleScroll}
       maxHeight={pxToDp(150)}
       minHeight={44}
       headerImage={require("../../images/headfriend.png")}
@@ -107,6 +142,13 @@ const Friend = () => {
             />
           </TouchableOpacity>
         ))}
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: pxToDp(10) }}>
+          <View style={{ flex: 1, height: 1, backgroundColor: '#CCCCCC' }} />
+          <Text style={{ color: '#CCCCCC', marginHorizontal: pxToDp(10) }}>
+            { params.page < totalPages ? '加载更多' :  '没有更多了'}
+          </Text>
+          <View style={{ flex: 1, height: 1, backgroundColor: '#CCCCCC' }} />
+        </View>
       </>
     </HeaderImageScrollView>
   )
