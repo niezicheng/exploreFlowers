@@ -16,20 +16,57 @@ const Detail = (props) => {
 
   const [params, setParams] = useState({
     page: 1,
-    pagesize: 5,
+    pagesize: 10,
   });
   const [detail, setDetail] = useState({});
+  // 当前用户动态数组
+  const [trends, setTrends] = useState([]);
+  // 总的页面数
+  const [totalPages, setTotalPages] = useState(1);
+  // 当前是否正在请求数据(滚动事件分页中节流操作)
+  const [isLoading, setIsLoading] = useState(false);
+
+  const getDetail = async (data) => {
+    const url = FRIENDS_PERSONALINFO.replace(':id', route.params.id);
+    const res = await request.privateGet(url, data || params);
+
+    if (res && res.data) {
+      console.log(res)
+      setDetail(res.data);
+      setTotalPages(res.pages);
+      setIsLoading(false);
+      // 使用用户动态数据分页后单独提取用户动态数据数组信息
+      setTrends([...trends, ...res.data.trends])
+    }
+  }
 
   useEffect(() => {
-    (async () => {
-      const url = FRIENDS_PERSONALINFO.replace(':id', route.params.id);
-      const res = await request.privateGet(url, params);
-
-      if (res && res.data) {
-        setDetail(res.data);
-      }
-    })()
+    getDetail();
   }, [])
+
+  // 列表滚动事件
+  const handleScroll = ({ nativeEvent }) => {
+    const {
+      contentSize,
+      layoutMeasurement,
+      contentOffset
+    } = nativeEvent;
+
+    // 滚动条触底
+    const isReachBottom = (contentSize.height - layoutMeasurement.height - contentOffset.y) < 10;
+
+    // 是否存在下一页数据
+    const hasMore = params.page < totalPages;
+    if (isReachBottom && hasMore && !isLoading) {
+      const data = {
+        ...params,
+        page: params.page + 1,
+      };
+      setIsLoading(true);
+      setParams(data);
+      getDetail(data);
+    }
+  }
 
   if (!detail.silder) {
     return null;
@@ -37,6 +74,7 @@ const Detail = (props) => {
 
   return (
     <HeaderImageScrollView
+      onScroll={handleScroll}
       maxHeight={pxToDp(220)}
       minHeight={pxToDp(40)}
       renderForeground={() => (
@@ -93,7 +131,7 @@ const Detail = (props) => {
           </View>
         </View>
         <View style={styles.dynamicBody}>
-          {detail.trends.map((user, index) => (
+          {trends.map((user, index) => (
             <DynamicCard
               key={index}
               userDetail={detail}
@@ -101,6 +139,13 @@ const Detail = (props) => {
               currentUser={index}
             />
           ))}
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: pxToDp(10) }}>
+          <View style={{ flex: 1, height: 1, backgroundColor: '#CCCCCC' }} />
+          <Text style={{ color: '#CCCCCC', marginHorizontal: pxToDp(10) }}>
+            { params.page < totalPages ? '加载更多' :  '没有更多了'}
+          </Text>
+          <View style={{ flex: 1, height: 1, backgroundColor: '#CCCCCC' }} />
+        </View>
         </View>
       </View>
     </HeaderImageScrollView>
