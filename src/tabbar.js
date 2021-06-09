@@ -9,6 +9,7 @@ import Friend from './pages/friend';
 import Group from './pages/group';
 import Message from './pages/message';
 import My from './pages/my';
+import JMessage from './utils/JMessage';
 
 const TabBar = (props) => {
   const [selectedTab, setSelectedTab] = useState('friend');
@@ -20,6 +21,9 @@ const TabBar = (props) => {
       if (res && res.data) {
         // 将用户信息存入 mobx 中
         props.UserStore.setUser(res.data);
+
+        // 进行极光登录
+        await JMessage.login(res.data.guid, res.data.mobile);
       }
     })()
   }, [])
