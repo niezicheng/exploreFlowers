@@ -23,7 +23,9 @@ const TabBar = (props) => {
         props.UserStore.setUser(res.data);
 
         // 进行极光登录
-        await JMessage.login(res.data.guid, res.data.mobile);
+        await JMessage.login(res.data.guid, res.data.mobile)
+          .then(res => console.log('login success', res))
+          .catch(error => console.log('login fail', error));
       }
     })()
   }, [])

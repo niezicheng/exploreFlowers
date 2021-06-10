@@ -72,15 +72,18 @@ const Detail = (props) => {
 
   // 喜欢按钮点击事件
   const handleLike = async () => {
-    console.log(11111111, detail.guid, props.UserStore.user.mobile)
     // 接受消息人 => 正在被浏览的用户
     const guid = detail.guid;
     // 文本内容 => 当前登录用户手机号 + 喜欢了你
     const text = `${props.UserStore.user.mobile} 喜欢了你`;
     // 额外数据 => 当前登录用户信息
     const extras = { user: JSON.stringify(detail) }
-    // const res = await JMessage.sendTextMessage(guid, text, extras);
-    // console.log(res);
+
+    // 目前极光通讯该 api 服务器出现问题，无法返回成功数据
+    // error: { description: "Server internal error.", code: 871104 }
+    await JMessage.sendTextMessage(guid, text, extras)
+      .then(res => console.log('success:', res))
+      .catch(error => console.log('error:', error));
     Toast.smile('喜欢成功', 1000, 'center');
   }
 
