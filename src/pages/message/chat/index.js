@@ -4,14 +4,14 @@ import {
   View,
   Alert,
   Dimensions,
-  Button,
   Platform,
 } from 'react-native';
 import IMUI from 'aurora-imui-react-native';
+// import RNFS from 'react-native-fs'; // 文件操作库
+import { inject, observer } from 'mobx-react';
+import { BASE_URI } from '../../../utils/pathMap';
 import JMessage from '../../../utils/JMessage';
-
-// 文件操作库
-var RNFS = require('react-native-fs');
+import NavHeader from '../../../components/NavHeader';
 
 // 聊天输入框组件
 var InputView = IMUI.ChatInput;
@@ -49,6 +49,8 @@ function constructNormalMessage() {
   return message;
 };
 
+@inject('UserStore')
+@observer
 export default class TestRNIMUI extends Component {
   constructor(props) {
     super(props);
@@ -95,9 +97,7 @@ export default class TestRNIMUI extends Component {
     const limit = 1000;
     // 获取极光历史消息
     const history = await JMessage.getHistoryMessages(username, from, limit);
-    console.log('----------------------');
-    console.log(history)
-    console.log('----------------------');
+    // console.log(history);
     // 消息数组
     var messages = [];
     history.forEach(v => {
@@ -106,7 +106,16 @@ export default class TestRNIMUI extends Component {
       // 设置用户相关头像
       // 发送者 this.props.UserStore.user.header
       // 接受者头像 this.props.route.params.header
-      message.fromUser.avatarPath = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1534926548887&di=f107f4f8bd50fada6c5770ef27535277&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F11%2F67%2F23%2F69i58PICP37.jpg",//1
+      // 判断发送者和接受者(获取消息对象中属性 form.username 等于当前登录用户 guid)
+      if (v.from.username === this.props.UserStore.user.guid) {
+        // 当前消息是属于发送者的
+        message.isOutgoing = true;
+        message.fromUser.avatarPath;
+        message.fromUser.avatarPath = `${BASE_URI}${this.props.UserStore.user.header}` || "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1534926548887&di=f107f4f8bd50fada6c5770ef27535277&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F11%2F67%2F23%2F69i58PICP37.jpg";
+      } else {
+        message.isOutgoing = false;
+        message.fromUser.avatarPath = `${BASE_URI}${this.props.route.params.header}` || "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1534926548887&di=f107f4f8bd50fada6c5770ef27535277&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F11%2F67%2F23%2F69i58PICP37.jpg";
+      }
       // 但前消息展示的类型
       message.msgType = 'text';
       // 设置消息内容
@@ -286,14 +295,14 @@ export default class TestRNIMUI extends Component {
   // 发送文件或图片消息
   onSendGalleryFiles = (mediaFiles) => {
     /**
-     * WARN: This callback will return original image, 
+     * WARN: This callback will return original image,
      * if insert it directly will high memory usage and blocking UI。
      * You should crop the picture before insert to messageList。
-     * 
+     *
      * WARN: 这里返回的是原图，直接插入大会话列表会很大且耗内存.
      * 应该做裁剪操作后再插入到 messageListView 中，
      * 一般的 IM SDK 会提供裁剪操作，或者开发者手动进行裁剪。
-     * 
+     *
      * 代码用例不做裁剪操作。
      */
     Alert.alert('fas', JSON.stringify(mediaFiles))
@@ -369,55 +378,18 @@ export default class TestRNIMUI extends Component {
         inputViewLayout: { flex: 1, width: window.width, height: window.height },
         navigationBar: { height: 0 }
       })
-    } 
+    }
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <View style={this.state.navigationBar}
-          ref="NavigatorView">
-          <Button
-            style={styles.sendCustomBtn}
-            title="Custom Message"
-            onPress={() => {
-              if (Platform.OS === 'ios') {
-                var message = constructNormalMessage()
-                message.msgType = 'custom'
-                message.content = `
-                <h5>This is a custom message. </h5>
-                <img src="file://${RNFS.MainBundlePath}/default_header.png"/>
-                `
-                console.log(message.content)
-                message.contentSize = { 'height': 100, 'width': 200 }
-                message.extras = { "extras": "fdfsf" }
-                AuroraIController.appendMessages([message])
-                AuroraIController.scrollToBottom(true)
-              } else {
-                var message = constructNormalMessage()
-                message.msgType = "custom"
-                message.msgId = "10"
-                message.status = "send_going"
-                message.isOutgoing = true
-                message.content = `
-                <body bgcolor="#ff3399">
-                  <h5>This is a custom message. </h5>
-                  <img src="/storage/emulated/0/XhsEmoticonsKeyboard/Emoticons/wxemoticons/icon_040_cover.png"></img>
-                </body>`
-                message.contentSize = { 'height': 100, 'width': 200 }
-                message.extras = { "extras": "fdfsf" }
-                var user = {
-                  userId: "1",
-                  displayName: "",
-                  avatarPath: ""
-                }
-                user.displayName = "0001"
-                user.avatarPath = "ironman"
-                message.fromUser = user
-                AuroraIController.appendMessages([message]);
-              }
-            }}>
-          </Button>
+        <View
+          // style={this.state.navigationBar}
+          style={{ width: '100%' }}
+          ref="NavigatorView"
+        >
+          <NavHeader title={this.props.route.params.nick_name} />
         </View>
         <MessageListView style={this.state.messageListLayout}
           ref="MessageList"
@@ -440,6 +412,7 @@ export default class TestRNIMUI extends Component {
           photoMessageRadius={5}
           maxBubbleWidth={0.7}
           videoDurationTextColor={"#ffffff"}
+          dateTextColor="#666666"
         />
         <InputView style={this.state.inputViewLayout}
           ref="ChatInput"
