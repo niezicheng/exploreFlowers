@@ -247,14 +247,19 @@ export default class TestRNIMUI extends Component {
   }
 
   // 发送文本消息
-  onSendText = (text) => {
-    var message = constructNormalMessage()
-    var evenmessage = constructNormalMessage()
+  onSendText = async (text) => {
+    const message = constructNormalMessage();
 
-    message.msgType = 'text'
-    message.text = text
+    message.msgType = 'text';
+    message.text = text;
 
-    AuroraIController.appendMessages([message])
+    AuroraIController.appendMessages([message]);
+    // 极光发送文本
+    const username = this.props.route.params.guid;
+    const extras = { user: JSON.stringify(this.props.UserStore.user) }
+    const res = await JMessage.sendTextMessage(username, text, extras);
+
+    // console.log(res, 'resText-=-=-===-=-==');
   }
 
   onTakePicture = (media) => {
@@ -322,8 +327,9 @@ export default class TestRNIMUI extends Component {
       const username = this.props.route.params.guid;
       const path = v.mediaPath;
       const extras = { user: JSON.stringify(this.props.UserStore.user) }
-      const res = await JMessage.sendImageMessage(username, path, extras);
-      console.log(res, '-=-=-=-===-=res')
+      // const res = await JMessage.sendImageMessage(username, path, extras);
+      await JMessage.sendImageMessage(username, path, extras);
+      // console.log(res, '-=-=-=-===-=res')
       // 修改发送状态 发送中 => 发送完成
       AuroraIController.updateMessage({ ...message, status: 'send_success' })
     });

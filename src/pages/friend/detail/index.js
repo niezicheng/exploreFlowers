@@ -75,7 +75,7 @@ const Detail = (props) => {
     // 接受消息人 => 正在被浏览的用户
     const guid = detail.guid;
     // 文本内容 => 当前登录用户手机号 + 喜欢了你
-    const text = `${props.UserStore.user.mobile} 喜欢了你`;
+    const text = `${props.UserStore.user.nick_name} 喜欢了你`;
     // 额外数据 => 当前登录用户信息
     const extras = { user: JSON.stringify(detail) }
 
