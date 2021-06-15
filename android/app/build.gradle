@@ -198,6 +198,8 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
+    implementation project(':aurora-imui-react-native')
+
     compile project(':jmessage-react-plugin') // 新增的
     compile project(':jcore-react-native')  // 新增的
 

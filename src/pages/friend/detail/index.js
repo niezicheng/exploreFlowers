@@ -87,6 +87,11 @@ const Detail = (props) => {
     Toast.smile('喜欢成功', 1000, 'center');
   }
 
+  // 点击跳转到聊天页面
+  const goToChat = () => {
+    props.navigation.navigate('Chat', detail);
+  }
+
   if (!detail.silder) {
     return null;
   }
@@ -123,6 +128,7 @@ const Detail = (props) => {
           <View style={styles.dynamicTopRight}>
             <TouchableOpacity
               activeOpacity={0.8}
+              onPress={goToChat}
             >
               <LinearGradient
                 colors={['#f2ab5a', '#ec7c50']}

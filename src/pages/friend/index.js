@@ -29,7 +29,7 @@ const Friend = () => {
   // 推荐朋友数据
   const [recommends, setRecommends] = useState([]);
   // 总的页面数
-  const [totalPages, setTotalPages] = useState(4);
+  const [totalPages, setTotalPages] = useState(10);
   // 当前是否正在请求数据(滚动事件分页中节流操作)
   const [isLoading, setIsLoading] = useState(false);
 
