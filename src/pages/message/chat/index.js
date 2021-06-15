@@ -116,14 +116,20 @@ export default class TestRNIMUI extends Component {
         message.isOutgoing = false;
         message.fromUser.avatarPath = `${BASE_URI}${this.props.route.params.header}` || "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1534926548887&di=f107f4f8bd50fada6c5770ef27535277&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F11%2F67%2F23%2F69i58PICP37.jpg";
       }
-      // 但前消息展示的类型
-      message.msgType = 'text';
-      // 设置消息内容
-      message.text = v.text;
+      if (v.type === 'text') {
+        // 但前消息展示的类型
+        message.msgType = 'text';
+        // 设置消息内容
+        message.text = v.text;
+      } else if (v.type === 'image') {
+        // 但前消息展示的类型
+        message.msgType = 'image';
+        // 图片路径
+        message.mediaPath = v.thumbPath;
+      }
+
       // 带上发送的时间
       message.timeString = (new Date(v.createTime)).toLocaleTimeString();
-      // 图片路径
-      // message.mediaPath = imageUrlArray[index];
       // 聊天信息气泡大小
       message.contentSize = { 'height': 100, 'width': 200 };
       // 额外数据
@@ -294,33 +300,33 @@ export default class TestRNIMUI extends Component {
 
   // 发送文件或图片消息
   onSendGalleryFiles = (mediaFiles) => {
-    /**
-     * WARN: This callback will return original image,
-     * if insert it directly will high memory usage and blocking UI。
-     * You should crop the picture before insert to messageList。
-     *
-     * WARN: 这里返回的是原图，直接插入大会话列表会很大且耗内存.
-     * 应该做裁剪操作后再插入到 messageListView 中，
-     * 一般的 IM SDK 会提供裁剪操作，或者开发者手动进行裁剪。
-     *
-     * 代码用例不做裁剪操作。
-     */
-    Alert.alert('fas', JSON.stringify(mediaFiles))
-    for (index in mediaFiles) {
+    mediaFiles.forEach(async (v) => {
+      // 创建一个消息对象
       var message = constructNormalMessage()
-      if (mediaFiles[index].mediaType == "image") {
-        message.msgType = "image"
-      } else {
-        message.msgType = "video"
-        message.duration = mediaFiles[index].duration
+      // 判断当前文件类型
+      if (v.mediaType == "image") {
+        message.msgType = "image";
       }
+      // } else {
+      //   message.msgType = "video";
+      //   message.duration = v.duration;
+      // }
 
-      message.mediaPath = mediaFiles[index].mediaPath
-      message.timeString = "8:00"
-      message.status = "send_going"
-      AuroraIController.appendMessages([message])
-      AuroraIController.scrollToBottom(true)
-    }
+      message.mediaPath = v.mediaPath;
+      // 设置消息状态 => 发送中
+      message.status = "send_going";
+      AuroraIController.appendMessages([message]);
+      AuroraIController.scrollToBottom(true);
+
+      // 调用极光发送图片 api
+      const username = this.props.route.params.guid;
+      const path = v.mediaPath;
+      const extras = { user: JSON.stringify(this.props.UserStore.user) }
+      const res = await JMessage.sendImageMessage(username, path, extras);
+      console.log(res, '-=-=-=-===-=res')
+      // 修改发送状态 发送中 => 发送完成
+      AuroraIController.updateMessage({ ...message, status: 'send_success' })
+    });
 
     this.resetMenu()
   }

@@ -74,6 +74,29 @@ export default {
         reject,
       )
     })
+  },
+
+  /**
+   * 发送图片消息
+   * @param {*} username 接受者用户名
+   * @param {*} path 图片路径
+   * @param {*} extras 额外数据
+   */
+  sendImageMessage(username, path, extras) {
+    // 消息类型 单个 即可
+    const type = 'single';
+
+    return new Promise((resolve, reject) => {
+      JMessage.sendImageMessage({
+        type,
+        username,
+        path,
+        extras,
+      },
+        resolve,
+        reject,
+      )
+    })
   }
 
 }
