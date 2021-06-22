@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { View, Image, Text, Modal } from 'react-native';
+import { View, Image, Text, Modal, TouchableOpacity } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Icon from '../../../../components/Icon';
 import { BASE_URI } from '../../../../utils/pathMap';

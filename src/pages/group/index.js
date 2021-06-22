@@ -6,11 +6,10 @@ import Recommend from './recommend';
 import Latest from './latest';
 
 export default () => {
-  const [tabs, setTabs] = useState()
 
   return (
     <ScrollableTabView
-      initialPage={1}
+      initialPage={0}
       renderTabBar={() => <CustomerBar />}
     >
       <Recommend tabLabel='推荐' />
