@@ -1,12 +1,20 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useState } from 'react';
+import { Text } from 'react-native';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
+import CustomerBar from './components/customerBar';
+import Recommend from './recommend';
+import Latest from './latest';
 
-const Group = () => {
+export default () => {
+  const [tabs, setTabs] = useState()
+
   return (
-    <View>
-      <Text>圈子-首页</Text>
-    </View>
-  )
+    <ScrollableTabView
+      initialPage={1}
+      renderTabBar={() => <CustomerBar />}
+    >
+      <Recommend tabLabel='推荐' />
+      <Latest tabLabel='最新' />
+    </ScrollableTabView>
+  );
 }
-
-export default Group;
