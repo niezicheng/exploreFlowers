@@ -28,14 +28,14 @@ const Recommend = () => {
     }
   }
 
-  const handleShowImg = (item, index) => {
-    const imgUrls = item.trends[currentUser].album.map(item => ({ url: `${BASE_URI}${item.thum_img_path}` }))
+  const handleShowImg = (images, index) => {
+    const imgUrls = images.map(item => ({ url: `${BASE_URI}${item.thum_img_path}` }))
     setImgUrls(imgUrls);
     setVisible(true);
     setCurrent(index);
   }
 
-  const renderItem = ({ item, index }) => (
+  const renderItem = ({ item, currentUser }) => (
     <View style={styles.container}>
       <View style={styles.header}>
         <Image
@@ -68,7 +68,7 @@ const Recommend = () => {
         {item.images.map((imgScr, index) => (
           <TouchableOpacity
             key={index}
-            onPress={() => handleShowImg(index)}
+            onPress={() => handleShowImg(item.images, index)}
           >
             <Image
               source={{ uri: `${BASE_URI}${imgScr.thum_img_path}`}}
