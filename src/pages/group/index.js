@@ -10,6 +10,7 @@ export default () => {
   return (
     <ScrollableTabView
       initialPage={0}
+      locked
       renderTabBar={() => <CustomerBar />}
     >
       <Recommend tabLabel='推荐' />
