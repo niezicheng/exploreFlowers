@@ -17,8 +17,9 @@ export default StyleSheet.create({
     borderRadius: pxToDp(20),
   },
   headerRight: {
+    flex: 1,
     justifyContent: 'space-between',
-    marginLeft: pxToDp(10),
+    marginLeft: pxToDp(15),
   },
   genderIcon: {
     marginHorizontal: pxToDp(10),
@@ -39,5 +40,5 @@ export default StyleSheet.create({
     width: pxToDp(70),
     height: pxToDp(70),
     marginRight: pxToDp(5),
-  }
+  },
 })

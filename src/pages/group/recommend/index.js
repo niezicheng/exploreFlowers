@@ -5,6 +5,7 @@ import Icon from '../../../components/Icon';
 import request from '../../../utils/request';
 import { QZ_TJDT, BASE_URI } from '../../../utils/pathMap';
 import { pxToDp } from '../../../utils/stylesKits';
+import date  from '../../../utils/date';
 import styles from './style';
 
 const Recommend = () => {
@@ -35,7 +36,7 @@ const Recommend = () => {
     setCurrent(index);
   }
 
-  const renderItem = ({ item, currentUser }) => (
+  const renderItem = ({ item }) => (
     <View style={styles.container}>
       <View style={styles.header}>
         <Image
@@ -61,6 +62,11 @@ const Recommend = () => {
             <Text style={styles.textColor}>{item.agediff < 10 ? '年龄相仿' : '有点代沟'}</Text>
           </View>
         </View>
+        <TouchableOpacity
+          activeOpacity={0.8}
+        >
+          <Icon type="icongengduo" size={18} color="#666" />
+        </TouchableOpacity>
       </View>
 
       <Text style={styles.contentText}>{item.content}</Text>
@@ -76,6 +82,33 @@ const Recommend = () => {
             />
           </TouchableOpacity>
         ))}
+      </View>
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: pxToDp(5) }}>
+        <Text style={{ color: '#666', marginRight: pxToDp(10) }}>距离 {item.dist} km</Text>
+        <Text style={{ color: '#666' }}>{date(item.create_time).fromNow()}</Text>
+      </View>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{ flexDirection: 'row', alignItems: 'center' }}
+        >
+          <Icon type="icondianzan-o" size={18} color="#666" />
+          <Text style={{ color: '#666', marginLeft: pxToDp(2) }}>{item.star_count}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{ flexDirection: 'row', alignItems: 'center' }}
+        >
+          <Icon type="iconpinglun" size={18} color="#666" style={{ marginTop: pxToDp(4) }} />
+          <Text style={{ color: '#666', marginLeft: pxToDp(2) }}>{item.comment_count}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{ flexDirection: 'row', alignItems: 'center' }}
+        >
+          <Icon type="iconxihuan-o" size={18} color="#666" />
+          <Text style={{ color: '#666', marginLeft: pxToDp(2) }}>{item.like_count}</Text>
+        </TouchableOpacity>
       </View>
       <Modal visible={visible} transparent>
         <ImageViewer
