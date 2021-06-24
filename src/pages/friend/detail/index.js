@@ -5,6 +5,7 @@ import { Carousel } from 'teaset';
 import LinearGradient from 'react-native-linear-gradient';
 import { inject, observer } from 'mobx-react';
 import Icon from '../../../components/Icon';
+import LoadingText from '../../../components/loadingText';
 import request from '../../../utils/request';
 import { pxToDp } from '../../../utils/stylesKits';
 import { FRIENDS_PERSONALINFO, BASE_URI } from '../../../utils/pathMap';
@@ -165,13 +166,7 @@ const Detail = (props) => {
               currentUser={index}
             />
           ))}
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: pxToDp(10) }}>
-          <View style={{ flex: 1, height: 1, backgroundColor: '#CCCCCC' }} />
-          <Text style={{ color: '#CCCCCC', marginHorizontal: pxToDp(10) }}>
-            { params.page < totalPages ? '加载更多' :  '没有更多了'}
-          </Text>
-          <View style={{ flex: 1, height: 1, backgroundColor: '#CCCCCC' }} />
-        </View>
+          <LoadingText isMore={(params.page < totalPages) && !isLoading} />
         </View>
       </View>
     </HeaderImageScrollView>

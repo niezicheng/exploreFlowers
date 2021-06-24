@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, Image, Modal, TouchableOpacity } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Icon from '../../../components/Icon';
+import LoadingText from '../../../components/loadingText';
 import request from '../../../utils/request';
 import { QZ_TJDT, BASE_URI } from '../../../utils/pathMap';
 import { pxToDp } from '../../../utils/stylesKits';
@@ -129,13 +130,7 @@ const Recommend = () => {
       </View>
       {
         index === listData.length - 1 && (
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: pxToDp(10) }}>
-            <View style={{ flex: 1, height: 1, backgroundColor: '#CCCCCC' }} />
-            <Text style={{ color: '#CCCCCC', marginHorizontal: pxToDp(10) }}>
-              { params.page < totalPages ? '' :  '没有更多了'}
-            </Text>
-            <View style={{ flex: 1, height: 1, backgroundColor: '#CCCCCC' }} />
-          </View>
+          <LoadingText isMore={(params.page < totalPages) && !isLoading} moreText='' />
         )
       }
     </>
@@ -144,7 +139,6 @@ const Recommend = () => {
   // 触发触底事件
   const onEndReached = () => {
     const { page } = params;
-    console.log('onEndReached=======', totalPages, page)
     // 是否存在下一页数据信息
     if (page >= totalPages || isLoading) {
       return;

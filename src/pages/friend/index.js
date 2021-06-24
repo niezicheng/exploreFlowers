@@ -2,7 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StatusBar, TouchableOpacity, Image } from 'react-native';
 import HeaderImageScrollView from 'react-native-image-header-scroll-view';
 import { Overlay } from 'teaset';
-import { NavigationContext } from '@react-navigation/native'
+import { NavigationContext } from '@react-navigation/native';
+import LoadingText from '../../components/loadingText';
 import { pxToDp } from '../../utils/stylesKits';
 import request from '../../utils/request';
 import { FRIENDS_RECOMMEND } from '../../utils/pathMap';
@@ -142,13 +143,7 @@ const Friend = () => {
             />
           </TouchableOpacity>
         ))}
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: pxToDp(10) }}>
-          <View style={{ flex: 1, height: 1, backgroundColor: '#CCCCCC' }} />
-          <Text style={{ color: '#CCCCCC', marginHorizontal: pxToDp(10) }}>
-            { params.page < totalPages ? '加载更多' :  '没有更多了'}
-          </Text>
-          <View style={{ flex: 1, height: 1, backgroundColor: '#CCCCCC' }} />
-        </View>
+        <LoadingText isMore={(params.page < totalPages) && !isLoading} />
       </>
     </HeaderImageScrollView>
   )
