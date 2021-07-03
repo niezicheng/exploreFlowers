@@ -1,19 +1,18 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, FlatList, Image, Modal, TouchableOpacity } from 'react-native';
-import ImageViewer from 'react-native-image-zoom-viewer';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { ActionSheet } from 'teaset';
 import { inject, observer } from 'mobx-react';
 import { NavigationContext } from '@react-navigation/native';
 import Icon from '../../../components/Icon';
 import LoadingText from '../../../components/loadingText';
 import request from '../../../utils/request';
-import { QZ_TJDT, BASE_URI, QZ_DT_DZ, QZ_DT_XH, QZ_DT_BGXQ } from '../../../utils/pathMap';
+import { QZ_TJDT, QZ_DT_DZ, QZ_DT_XH, QZ_DT_BGXQ } from '../../../utils/pathMap';
 import { pxToDp } from '../../../utils/stylesKits';
-import date  from '../../../utils/date';
+
 import styles from './style';
 import Toast from '../../../utils/Toast';
-import JMessage from '../../../utils/JMessage'
-
+import JMessage from '../../../utils/JMessage';
+import DynamicCard from '../components/dynamicCard';
 
 const Recommend = (props) => {
   const context = useContext(NavigationContext);
@@ -22,11 +21,8 @@ const Recommend = (props) => {
     page: 1,
     pagesize: 10,
   }); // 接口参数
-  const [listData, setListData] = useState([]); // 数据数组
-  const [visible, setVisible] = useState(false); // 显示预览图片 modal
-  const [imgUrls, setImgUrls] = useState([]); // 预览的图片数组
-  const [current, setCurrent] = useState(0); // 当前预览的图片索引
 
+  const [listData, setListData] = useState([]); // 数据数组
   const [totalPages, setTotalPages] = useState(2); // 数据总的页数
   const [isLoading, setIsLoading] = useState(false); // 是否正在请求数据信息
 
@@ -47,14 +43,6 @@ const Recommend = (props) => {
       setTotalPages(res.pages);
       setIsLoading(false);
     }
-  }
-
-  // 图片点击预览方法
-  const handleShowImg = (images, index) => {
-    const imgUrls = images.map(item => ({ url: `${BASE_URI}${item.thum_img_path}` }))
-    setImgUrls(imgUrls);
-    setVisible(true);
-    setCurrent(index);
   }
 
   // 点赞图标点击事件
@@ -115,7 +103,7 @@ const Recommend = (props) => {
     }
   }
 
-  // 动态卡片更多操作按钮
+   // 动态卡片更多操作按钮
   const handelMore = async (user) => {
     const opts = [{
       title: '举报',
@@ -150,56 +138,10 @@ const Recommend = (props) => {
   const renderItem = ({ item, index }) => (
     <React.Fragment key={item.tid}>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Image
-            source={{ uri: `${BASE_URI}${item.header}` }}
-            style={styles.avatar}
-          />
-          <View style={styles.headerRight}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: pxToDp(10) }}>
-              <Text style={[styles.textColor, { fontWeight: 'bold'}]}>{item.nick_name}</Text>
-              <Icon
-                type={item.gender === '男' ? 'icontanhuanan' : 'icontanhuanv'}
-                color={item.gender === '男' ? 'red' : '#b564bf'}
-                size={18}
-                style={styles.genderIcon}
-              />
-              <Text style={[styles.textColor, { fontWeight: 'bold', }]}>{`${item.age}岁`}</Text>
-            </View>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={styles.textColor}>{item.marry}</Text>
-              <Text style={styles.textColor}> | </Text>
-              <Text style={styles.textColor}>{item.xueli}</Text>
-              <Text style={styles.textColor}> | </Text>
-              <Text style={styles.textColor}>{item.agediff < 10 ? '年龄相仿' : '有点代沟'}</Text>
-            </View>
-          </View>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => handelMore(item)}
-          >
-            <Icon type="icongengduo" size={18} color="#666" />
-          </TouchableOpacity>
-        </View>
-
-        <Text style={styles.contentText}>{item.content}</Text>
-        <View style={styles.imgWrap}>
-          {item.images.map((imgScr, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => handleShowImg(item.images, index)}
-            >
-              <Image
-                source={{ uri: `${BASE_URI}${imgScr.thum_img_path}`}}
-                style={styles.dynamicImg}
-              />
-            </TouchableOpacity>
-          ))}
-        </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: pxToDp(5) }}>
-          <Text style={{ color: '#666', marginRight: pxToDp(10) }}>距离 {item.dist} km</Text>
-          <Text style={{ color: '#666' }}>{date(item.create_time).fromNow()}</Text>
-        </View>
+        <DynamicCard
+          user={item}
+          handelMore={handelMore}
+        />
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <TouchableOpacity
             activeOpacity={0.8}
@@ -226,13 +168,6 @@ const Recommend = (props) => {
             <Text style={{ color: currentUserIndex === index ? likeColor : '#666', marginLeft: pxToDp(2) }}>{item.like_count}</Text>
           </TouchableOpacity>
         </View>
-        <Modal visible={visible} transparent>
-          <ImageViewer
-            imageUrls={imgUrls}
-            index={current}
-            onClick={() => setVisible(false)}
-          />
-        </Modal>
       </View>
       {
         index === listData.length - 1 && (
