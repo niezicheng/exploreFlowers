@@ -11,7 +11,8 @@ import Soul from './pages/friend/soul';
 import TestQA from './pages/friend/soul/testQA';
 import TestResult from './pages/friend/soul/testResult';
 import Detail from './pages/friend/detail';
-import Chat from './pages/message/chat'
+import Chat from './pages/message/chat';
+import Comment from './pages/group/recommend/comment';
 
 import Tabbar from './tabbar';
 
@@ -26,6 +27,7 @@ function Nav(props) {
     <NavigationContainer>
       <Stack.Navigator headerMode="none" initialRouteName={initRouteName}>
         <Stack.Screen name="Tabbar" component={Tabbar} />
+        <Stack.Screen name="Comment" component={Comment} />
         <Stack.Screen name="Chat" component={Chat} />
         <Stack.Screen name="Detail" component={Detail} />
         <Stack.Screen name="TestResult" component={TestResult} />

@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, FlatList, Image, Modal, TouchableOpacity } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { ActionSheet } from 'teaset';
+import { inject, observer } from 'mobx-react';
+import { NavigationContext } from '@react-navigation/native';
 import Icon from '../../../components/Icon';
 import LoadingText from '../../../components/loadingText';
 import request from '../../../utils/request';
@@ -11,9 +13,11 @@ import date  from '../../../utils/date';
 import styles from './style';
 import Toast from '../../../utils/Toast';
 import JMessage from '../../../utils/JMessage'
-import { inject, observer } from 'mobx-react';
+
 
 const Recommend = (props) => {
+  const context = useContext(NavigationContext);
+
   const [params, setParams] = useState({
     page: 1,
     pagesize: 10,
@@ -26,6 +30,7 @@ const Recommend = (props) => {
   const [totalPages, setTotalPages] = useState(2); // 数据总的页数
   const [isLoading, setIsLoading] = useState(false); // 是否正在请求数据信息
 
+  const [currentUserIndex, setCurrentUserIndex] = useState(); // 动态数据用户对应的索引
   const [starColor, setStarColor] = useState('#666'); // 点赞图标颜色
   const [likeColor, setLickColor] = useState('#666'); // 喜欢图标颜色
 
@@ -53,10 +58,11 @@ const Recommend = (props) => {
   }
 
   // 点赞图标点击事件
-  const handleStar = async (user) => {
+  const handleStar = async (user, index) => {
     // 1、发送点赞接口请求获取返回值：点赞成功还是去取消点赞
     const { tid, guid } = user;
     const url = QZ_DT_DZ.replace(':id', tid);
+    setCurrentUserIndex(index);
     const res = await request.privateGet(url);
 
     if (res && res.code === '10000') {
@@ -84,9 +90,10 @@ const Recommend = (props) => {
 
 
   // 喜欢图标点击事件
-  const handleLike = async (user) => {
+  const handleLike = async (user, index) => {
     // 1、发送喜欢接口请求获取返回值：喜欢成功还是去取消喜欢
     const { tid } = user;
+    setCurrentUserIndex(index);
     const url = QZ_DT_XH.replace(':id', tid);
     const res = await request.privateGet(url);
 
@@ -132,8 +139,11 @@ const Recommend = (props) => {
       setParams({ ...params, page: 1 });
       getList({ ...params, page: 1 }, []);
     }
+  }
 
-
+  // 跳转到评论页面
+  const goToComment = (user) => {
+    context.navigate('Comment', user);
   }
 
   // 数据渲染卡片内容
@@ -193,14 +203,15 @@ const Recommend = (props) => {
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => handleStar(item)}
+            onPress={() => handleStar(item, index)}
             style={{ flexDirection: 'row', alignItems: 'center' }}
           >
-            <Icon type="icondianzan-o" size={18} color={starColor} />
-            <Text style={{ color: starColor, marginLeft: pxToDp(2) }}>{item.star_count}</Text>
+            <Icon type="icondianzan-o" size={18} color={currentUserIndex === index ? starColor : '#666'} />
+            <Text style={{ color: currentUserIndex === index ? starColor : '#666', marginLeft: pxToDp(2) }}>{item.star_count}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.8}
+            onPress={() => goToComment(item)}
             style={{ flexDirection: 'row', alignItems: 'center' }}
           >
             <Icon type="iconpinglun" size={18} color="#666" style={{ marginTop: pxToDp(4) }} />
@@ -208,11 +219,11 @@ const Recommend = (props) => {
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => handleLike(item)}
+            onPress={() => handleLike(item, index)}
             style={{ flexDirection: 'row', alignItems: 'center' }}
           >
-            <Icon type="iconxihuan-o" size={18} color={likeColor} />
-            <Text style={{ color: likeColor, marginLeft: pxToDp(2) }}>{item.like_count}</Text>
+            <Icon type="iconxihuan-o" size={18} color={currentUserIndex === index ? likeColor : '#666'} />
+            <Text style={{ color: currentUserIndex === index ? likeColor : '#666', marginLeft: pxToDp(2) }}>{item.like_count}</Text>
           </TouchableOpacity>
         </View>
         <Modal visible={visible} transparent>
