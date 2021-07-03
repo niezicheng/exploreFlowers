@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, Image, Modal, TouchableOpacity } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
+import { ActionSheet } from 'teaset';
 import Icon from '../../../components/Icon';
 import LoadingText from '../../../components/loadingText';
 import request from '../../../utils/request';
-import { QZ_TJDT, BASE_URI, QZ_DT_DZ, QZ_DT_XH } from '../../../utils/pathMap';
+import { QZ_TJDT, BASE_URI, QZ_DT_DZ, QZ_DT_XH, QZ_DT_BGXQ } from '../../../utils/pathMap';
 import { pxToDp } from '../../../utils/stylesKits';
 import date  from '../../../utils/date';
 import styles from './style';
@@ -107,6 +108,34 @@ const Recommend = (props) => {
     }
   }
 
+  // 动态卡片更多操作按钮
+  const handelMore = async (user) => {
+    const opts = [{
+      title: '举报',
+      onPress: () => alert('举报'),
+    }, {
+      title: '不感兴趣',
+      onPress: () => noInterest(user),
+    }];
+
+    ActionSheet.show(opts, { title: '取消' });
+  }
+
+  // 不感兴趣的用户不会出现在信息展示列表
+  const noInterest = async (user) => {
+    const { tid } = user;
+    const url = QZ_DT_BGXQ.replace(':id', tid);
+    const res = await request.privateGet(url);
+
+    if (res && res.code === '10000') {
+      Toast.smile('操作成功');
+      setParams({ ...params, page: 1 });
+      getList({ ...params, page: 1 }, []);
+    }
+
+
+  }
+
   // 数据渲染卡片内容
   const renderItem = ({ item, index }) => (
     <React.Fragment key={item.tid}>
@@ -137,6 +166,7 @@ const Recommend = (props) => {
           </View>
           <TouchableOpacity
             activeOpacity={0.8}
+            onPress={() => handelMore(item)}
           >
             <Icon type="icongengduo" size={18} color="#666" />
           </TouchableOpacity>
