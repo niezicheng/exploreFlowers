@@ -4,7 +4,7 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 import Icon from '../../../components/Icon';
 import LoadingText from '../../../components/loadingText';
 import request from '../../../utils/request';
-import { QZ_TJDT, BASE_URI, QZ_DT_DZ } from '../../../utils/pathMap';
+import { QZ_TJDT, BASE_URI, QZ_DT_DZ, QZ_DT_XH } from '../../../utils/pathMap';
 import { pxToDp } from '../../../utils/stylesKits';
 import date  from '../../../utils/date';
 import styles from './style';
@@ -51,7 +51,7 @@ const Recommend = (props) => {
     setCurrent(index);
   }
 
-  // 点赞
+  // 点赞图标点击事件
   const handleStar = async (user) => {
     // 1、发送点赞接口请求获取返回值：点赞成功还是去取消点赞
     const { tid, guid } = user;
@@ -72,6 +72,32 @@ const Recommend = (props) => {
         const text = `${props.UserStore.user.nick_name} 点赞了你的动态`;
         const extras = { user: JSON.stringify(props.UserStore.user) }
         JMessage.sendTextMessage(guid, text, extras);
+      }
+
+      // 3、重新发送请求获取列表数据
+      setParams({ ...params, page: 1 });
+      // 注意重置 listData 数据需要将其作为函数参数传递，使用 setListData 异步赋值延时
+      getList({ ...params, page: 1 }, []);
+    }
+  }
+
+
+  // 喜欢图标点击事件
+  const handleLike = async (user) => {
+    // 1、发送喜欢接口请求获取返回值：喜欢成功还是去取消喜欢
+    const { tid } = user;
+    const url = QZ_DT_XH.replace(':id', tid);
+    const res = await request.privateGet(url);
+
+    if (res && res.code === '10000') {
+      if (res.data.iscancelstar) {
+        // 取消喜欢
+        Toast.message('取消成功', 500, 'center');
+        setLickColor('#666');
+      } else {
+        // 喜欢成功
+        Toast.smile('喜欢成功');
+        setLickColor('red');
       }
 
       // 3、重新发送请求获取列表数据
@@ -152,10 +178,11 @@ const Recommend = (props) => {
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.8}
+            onPress={() => handleLike(item)}
             style={{ flexDirection: 'row', alignItems: 'center' }}
           >
             <Icon type="iconxihuan-o" size={18} color={likeColor} />
-            <Text style={{ color: '#666', marginLeft: pxToDp(2) }}>{item.like_count}</Text>
+            <Text style={{ color: likeColor, marginLeft: pxToDp(2) }}>{item.like_count}</Text>
           </TouchableOpacity>
         </View>
         <Modal visible={visible} transparent>
