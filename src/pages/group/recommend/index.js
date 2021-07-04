@@ -4,6 +4,7 @@ import { ActionSheet } from 'teaset';
 import { inject, observer } from 'mobx-react';
 import { NavigationContext } from '@react-navigation/native';
 import Icon from '../../../components/Icon';
+import Button from '../../../components/LGButton';
 import LoadingText from '../../../components/loadingText';
 import request from '../../../utils/request';
 import { QZ_TJDT, QZ_DT_DZ, QZ_DT_XH, QZ_DT_BGXQ } from '../../../utils/pathMap';
@@ -184,6 +185,7 @@ const Recommend = (props) => {
     if (page >= totalPages || isLoading) {
       return;
     } else {
+      // 节流阀
       setIsLoading(true);
       setParams({
         ...params,
@@ -191,17 +193,27 @@ const Recommend = (props) => {
       });
       getList({ ...params, page: page + 1 });
     }
-    // 节流阀
   }
 
   return (
-    <FlatList
-      data={listData}
-      keyExtractor={(item, index) => `${item.tid}-${index}`}
-      renderItem={renderItem}
-      onEndReachedThreshold={0.1}
-      onEndReached={onEndReached}
-    />
+    <>
+      <FlatList
+        data={listData}
+        keyExtractor={(item, index) => `${item.tid}-${index}`}
+        renderItem={renderItem}
+        onEndReachedThreshold={0.1}
+        onEndReached={onEndReached}
+      />
+      <Button
+        onPress={() => context.navigate('Publish')}
+        colors={['#da6c8b', '#9b65cc']}
+        wrapStyle={{ position: 'absolute', bottom: '10%', right: '10%', }}
+        style={styles.button}
+        textStyle={styles.btnText}
+      >
+        发布
+      </Button>
+    </>
   );
 }
 

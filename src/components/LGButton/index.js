@@ -8,20 +8,25 @@ export default (props) => {
     activeOpacity,
     onPress,
     textStyle,
+    wrapStyle,
     style,
+    start = { x: 0, y: 0 },
+    end = { x: 0, y: 1 },
+    colors = ['#9b63cd', '#e0708c'],
     ...restProps
   }  = props;
 
   return (
     <TouchableOpacity
       {...restProps}
+      style={wrapStyle}
       activeOpacity={activeOpacity || 0.8}
       onPress={onPress}
     >
       <LinearGradient
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        colors={['#9b63cd', '#e0708c']}
+        start={start}
+        end={end}
+        colors={colors}
         style={[styles.container, style]}
       >
         <Text style={[styles.buttonText, textStyle]}>

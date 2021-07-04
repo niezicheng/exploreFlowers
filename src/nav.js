@@ -13,6 +13,7 @@ import TestResult from './pages/friend/soul/testResult';
 import Detail from './pages/friend/detail';
 import Chat from './pages/message/chat';
 import Comment from './pages/group/recommend/comment';
+import Publish from './pages/group/recommend/publish';
 
 import Tabbar from './tabbar';
 
@@ -28,6 +29,7 @@ function Nav(props) {
       <Stack.Navigator headerMode="none" initialRouteName={initRouteName}>
         <Stack.Screen name="Tabbar" component={Tabbar} />
         <Stack.Screen name="Comment" component={Comment} />
+        <Stack.Screen name="Publish" component={Publish} />
         <Stack.Screen name="Chat" component={Chat} />
         <Stack.Screen name="Detail" component={Detail} />
         <Stack.Screen name="TestResult" component={TestResult} />
