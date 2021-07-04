@@ -10,7 +10,7 @@ export default StyleSheet.create({
   // input
   input: {
     height: '40%',
-    backgroundColor: 'aqua',
+    // backgroundColor: 'aqua',
     textAlignVertical: 'top',
     padding: pxToDp(10),
   },
@@ -30,5 +30,27 @@ export default StyleSheet.create({
     color: '#666',
     fontSize: pxToDp(12),
     paddingLeft: pxToDp(5),
+  },
+
+  // photo
+  imgContainer: {
+    paddingVertical: pxToDp(5),
+  },
+  image: {
+    marginHorizontal: pxToDp(5),
+    width: pxToDp(40),
+    height: pxToDp(40),
+  },
+
+  // pick
+  pickWrap: {
+    height: pxToDp(40),
+    backgroundColor: '#EEEEEE',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: pxToDp(20),
+  },
+  iconWrap: {
+    marginRight: pxToDp(20),
   }
 })

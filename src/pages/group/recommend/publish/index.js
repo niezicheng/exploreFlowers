@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, TextInput, ScrollView, Image } from 'react-native';
+import ImagePicker from 'react-native-image-picker';
+import { ActionSheet } from 'teaset';
 import NavHeader from '../../../../components/NavHeader';
 import Icon from '../../../../components/Icon';
 import { pxToDp } from '../../../../utils/stylesKits';
 import Geo from '../../../../utils/Geo';
 import styles from './style';
+import Toast from '../../../../utils/Toast';
 
 // 发布内容接口参数信息
 // {
@@ -31,6 +34,7 @@ const Publish = () => {
   }); // 发布信息参数
 
   const [locationText, setLocationText] = useState('获取定位');
+  const [tempImgList ,setTempImgList] = useState([]); // 选择的临时图片数组
 
   // 发布动态信息
   const handlePublish = () => {}
@@ -49,6 +53,58 @@ const Publish = () => {
       longitude: location.split(',')[0],
       latitude: location.split(',')[1],
     });
+  }
+
+  // 选择图片
+  const handlePickImage = () => {
+    const options = {
+      title: '选择图片',
+      cancelButtonTitle: '取消',
+      takePhotoButtonTitle: '拍照',
+      chooseFromLibraryButtonTitle: '相册',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log('===============');
+      console.log('Response = ', response);
+      console.log('===============');
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        // 图片数量不能超过 9 张
+        if (tempImgList.length > 9) {
+          Toast.message('图片数量不能超过 9 张', 1000, 'center');
+          return;
+        }
+        setTempImgList([...tempImgList, response]);
+      }
+    });
+  }
+
+  // 点击移除图片
+  const removeImage = (index) => {
+    const imgDelete = () => {
+      tempImgList.splice(index, 1);
+      setTempImgList(tempImgList);
+      Toast.small('删除成功');
+    }
+
+    const options = [{
+      title: '删除',
+      onPress: imgDelete,
+    }];
+    ActionSheet.show(options, {
+      title: '取消',
+    })
   }
 
   return (
@@ -74,6 +130,41 @@ const Publish = () => {
         >
           <Icon type="iconlocation" color="#666" size={pxToDp(16)} />
           <Text style={styles.locationText}>{locationText}</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.imgContainer}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
+          {tempImgList.map((image, index) => (
+            <TouchableOpacity
+              key={index}
+              activeOpacity={0.8}
+              onPress={() => removeImage(index)}
+            >
+              <Image
+                source={{ uri: image.uri }}
+                style={styles.image}
+              />
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+      <View style={styles.pickWrap}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={handlePickImage}
+          style={styles.iconWrap}
+        >
+          <Icon type='icontupian' color='#666' size={pxToDp(20)} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => {}}
+          style={styles.iconWrap}
+        >
+          <Icon type='iconbiaoqing' color='#666' size={pxToDp(20)} />
         </TouchableOpacity>
       </View>
     </View>
