@@ -45,4 +45,28 @@ export default StyleSheet.create({
   commText: {
     color: '#666',
   },
+
+  // modal
+  modalContainer: {
+    position: 'absolute',
+    bottom: 0,
+    padding: pxToDp(5),
+    backgroundColor: '#EEE',
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  input: {
+    flex: 1,
+    backgroundColor: '#FFF',
+    height: pxToDp(25),
+    borderRadius: pxToDp(15),
+    padding: 0,
+    paddingHorizontal: pxToDp(10),
+  },
+  sendText: {
+    paddingHorizontal: pxToDp(10),
+    color: '#666',
+  },
 })

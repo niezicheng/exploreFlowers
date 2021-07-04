@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
 import NavHerder from '../../../../components/NavHeader';
 import Button from '../../../../components/LGButton';
 import Icon from '../../../../components/Icon';
 import DynamicCard from '../../components/dynamicCard';
 import request from '../../../../utils/request';
-import { QZ_DT_PL, BASE_URI, QZ_DT_PL_DZ } from '../../../../utils/pathMap';
+import { QZ_DT_PL, BASE_URI, QZ_DT_PL_DZ, QZ_DT_PL_TJ } from '../../../../utils/pathMap';
 import { pxToDp } from '../../../../utils/stylesKits';
 import date from '../../../../utils/date';
 import styles from './style';
@@ -33,6 +33,8 @@ const Comment = (props) => {
 
   const [commentList, setCommentList] = useState([]); // 评论数据
   const [total, setTotal] = useState(0); // 总评论条数
+  const [visible, setVisible] = useState(false); // 发表评论 modal 显/隐
+  const [inputValue, setInputValue] = useState(''); // 发表评论内容值
 
   useEffect(() => {
     getCommentList();
@@ -63,6 +65,46 @@ const Comment = (props) => {
     getCommentList({ ...params, page: 1 });
   }
 
+  // 显示评论模态框
+  const showCommentModal = () => {
+    setVisible(true);
+  }
+
+  // 关闭评论模态框
+  const closeCommentModal = () => {
+    setVisible(false);
+    setInputValue('');
+  }
+
+  // input change 事件
+  const handleInputChange = (value) => {
+    setInputValue(value);
+  }
+
+  // 发送评论信息
+  const handleSendComment = async () => {
+    // 评论非空判断是否发布评论
+    if (!inputValue.trim()) {
+      Toast.smile('评论内容不能为空!');
+      return;
+    }
+    // 调用接口发布评论内容
+    const data = { comment: inputValue }
+    const url = QZ_DT_PL_TJ.replace(':id', user.tid);
+    const res = await request.privatePost(url, data);
+
+    if (res && res.code === '10000') {
+      // 关闭 modal
+      closeCommentModal();
+
+      // 重新获取评论信息列表
+      setParams({ ...params, page: 1 })
+      getCommentList({ ...params, page: 1 });
+
+      Toast.smile(res.data);
+    }
+  }
+
   return (
     <>
       <NavHerder title='最新评论' />
@@ -74,6 +116,7 @@ const Comment = (props) => {
             <Text style={styles.badge}>{total}</Text>
           </View>
           <Button
+            onPress={showCommentModal}
             style={styles.btn}
             textStyle={styles.btnText}
           >
@@ -102,6 +145,29 @@ const Comment = (props) => {
             </View>
           ))}
         </ScrollView>
+        <Modal
+          visible={visible}
+          transparent={true}
+          animationType="slide"
+        >
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={closeCommentModal}
+            style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+          >
+            <View style={styles.modalContainer}>
+              <TextInput
+                value={inputValue}
+                onChangeText={handleInputChange}
+                autoFocus
+                placeholder='请输入评论内容'
+                onSubmitEditing={handleSendComment}
+                style={styles.input}
+              />
+              <Text onPress={handleSendComment} style={styles.sendText}>发布</Text>
+            </View>
+          </TouchableOpacity>
+        </Modal>
       </View>
     </>
   );
