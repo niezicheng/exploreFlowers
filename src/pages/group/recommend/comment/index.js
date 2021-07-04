@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity, ScrollView, Modal, TextInput } fro
 import NavHerder from '../../../../components/NavHeader';
 import Button from '../../../../components/LGButton';
 import Icon from '../../../../components/Icon';
+import LoadingText from '../../../../components/loadingText';
 import DynamicCard from '../../components/dynamicCard';
 import request from '../../../../utils/request';
 import { QZ_DT_PL, BASE_URI, QZ_DT_PL_DZ, QZ_DT_PL_TJ } from '../../../../utils/pathMap';
@@ -36,21 +37,26 @@ const Comment = (props) => {
   const [visible, setVisible] = useState(false); // 发表评论 modal 显/隐
   const [inputValue, setInputValue] = useState(''); // 发表评论内容值
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [totalPages, setTotalPages] = useState();
+
   useEffect(() => {
     getCommentList();
   }, [])
 
   // 获取评论信息
-  const getCommentList = async (paramsData) => {
+  const getCommentList = async (paramsData, commentListData) => {
     const { tid } = user;
     const url = QZ_DT_PL.replace(':id', tid);
 
     const res = await request.privateGet(url, paramsData || params);
+    const prevData = commentListData || commentList;
 
     if (res && res.code === '10000') {
-      console.log(res)
-      setCommentList(res.data);
+      setCommentList([...prevData, ...res.data]);
       setTotal(res.counts);
+      setTotalPages(res.pages);
+      setIsLoading(false);
     }
   }
 
@@ -62,7 +68,7 @@ const Comment = (props) => {
 
     Toast.smile('点赞成功');
     setParams({ ...params, page: 1 });
-    getCommentList({ ...params, page: 1 });
+    getCommentList({ ...params, page: 1 }, []);
   }
 
   // 显示评论模态框
@@ -99,9 +105,33 @@ const Comment = (props) => {
 
       // 重新获取评论信息列表
       setParams({ ...params, page: 1 })
-      getCommentList({ ...params, page: 1 });
+      getCommentList({ ...params, page: 1 }, []);
 
       Toast.smile(res.data);
+    }
+  }
+
+  // 滚动分页功能
+  const handleScroll = ({ nativeEvent }) => {
+    const {
+      contentSize,
+      layoutMeasurement,
+      contentOffset
+    } = nativeEvent;
+
+    // 滚动条触底
+    const isReachBottom = (contentSize.height - layoutMeasurement.height - contentOffset.y) < 10;
+
+    // 是否存在下一页数据, 添加节流操作 isLoading
+    const hasMore = params.page < totalPages;
+    if (isReachBottom && hasMore && !isLoading) {
+      const data = {
+        ...params,
+        page: params.page + 1,
+      };
+      setIsLoading(true);
+      setParams(data);
+      getCommentList(data);
     }
   }
 
@@ -125,6 +155,7 @@ const Comment = (props) => {
         </View>
         <ScrollView
           showsVerticalScrollIndicator={false}
+          onScroll={handleScroll}
         >
           {commentList.map((item, index) => (
             <View key={index} style={styles.commWrap}>
@@ -144,6 +175,7 @@ const Comment = (props) => {
               </TouchableOpacity>
             </View>
           ))}
+          <LoadingText isMore={(params.page < totalPages) && !isLoading} />
         </ScrollView>
         <Modal
           visible={visible}
