@@ -181,6 +181,7 @@ const Comment = (props) => {
           visible={visible}
           transparent={true}
           animationType="slide"
+          onRequestClose={closeCommentModal}
         >
           <TouchableOpacity
             activeOpacity={1}
