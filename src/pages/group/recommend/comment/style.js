@@ -14,11 +14,9 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
   },
   badge: {
-    width: pxToDp(15),
-    height: pxToDp(15),
-    lineHeight: pxToDp(15),
+    paddingHorizontal: pxToDp(1.5),
     textAlign: 'center',
-    borderRadius: pxToDp(10),
+    borderRadius: pxToDp(30),
     backgroundColor: 'red',
     color: '#FFFFFF',
     marginLeft: pxToDp(5),
@@ -30,5 +28,21 @@ export default StyleSheet.create({
   },
   btnText: {
     fontSize: pxToDp(10),
-  }
+  },
+  commWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomColor: '#CCC',
+    borderBottomWidth: pxToDp(1),
+    paddingVertical: pxToDp(5),
+  },
+  headerImg: {
+    width: pxToDp(40),
+    height: pxToDp(40),
+    borderRadius: pxToDp(20),
+    marginRight: pxToDp(5),
+  },
+  commText: {
+    color: '#666',
+  },
 })
