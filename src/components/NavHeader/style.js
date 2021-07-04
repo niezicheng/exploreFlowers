@@ -7,24 +7,20 @@ export default StyleSheet.create({
   imageBg: {
     height: pxToDp(50),
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: pxToDp(20)
   },
   leftWrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: pxToDp(80),
-  },
-  rightWrap: {
-    width: pxToDp(80),
-  },
-  backText: {
-    color: '#fff',
-    fontSize: pxToDp(14)
   },
   title: {
-    color: '#fff',
-    fontSize: pxToDp(14),
+    fontSize: pxToDp(16),
+    flex: 1,
+    textAlign: 'center',
   },
+  textStyle: {
+    color: '#fff',
+    fontSize: pxToDp(13)
+  }
 })

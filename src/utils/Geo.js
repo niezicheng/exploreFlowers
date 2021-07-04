@@ -1,5 +1,6 @@
 import { PermissionsAndroid, Platform } from "react-native";
 import { init, Geolocation } from "react-native-amap-geolocation";
+import Toast from './Toast';
 import axios from "axios";
 
 class Geo {
@@ -33,6 +34,7 @@ class Geo {
 
   // 通过地理位置信息经纬度信息调用高德api获取对应的位置详情信息
   async getCityByLocation() {
+    Toast.showLoading('定位获取中...');
     const { longitude, latitude } = await this.getCurrentPosition();
     const res = await axios.get("https://restapi.amap.com/v3/geocode/regeo", {
       // 高德地图 Web 端应用对应的 key
@@ -42,6 +44,7 @@ class Geo {
       // owner key
       // params: { location: `${longitude},${latitude}`, key: "6638e3c59bb2f26de508be07f7f5a061", }
     });
+    Toast.hideLoading();
     return Promise.resolve(res.data);
   }
 }
