@@ -5,10 +5,12 @@ import ImagePicker from 'react-native-image-picker';
 import { ActionSheet } from 'teaset';
 import NavHeader from '../../../../components/NavHeader';
 import Icon from '../../../../components/Icon';
-import { pxToDp } from '../../../../utils/stylesKits';
-import Geo from '../../../../utils/Geo';
-import styles from './style';
+import Emotion from '../../../../components/Emotion';
 import Toast from '../../../../utils/Toast';
+import Geo from '../../../../utils/Geo';
+import { pxToDp } from '../../../../utils/stylesKits';
+import styles from './style';
+
 
 // 发布内容接口参数信息
 // {
@@ -35,6 +37,8 @@ const Publish = () => {
 
   const [locationText, setLocationText] = useState('获取定位');
   const [tempImgList ,setTempImgList] = useState([]); // 选择的临时图片数组
+
+  const [showEmotion, setShowEmotion] = useState(false); // 是否显示表情节点
 
   // 发布动态信息
   const handlePublish = () => {}
@@ -107,6 +111,11 @@ const Publish = () => {
     })
   }
 
+  // 选择表情
+  const handlePressEmotion = ({ key }) => {
+    setInputValue(`${inputValue}${key}`);
+  }
+
   return (
     <View style={styles.container}>
       <NavHeader
@@ -161,12 +170,15 @@ const Publish = () => {
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => {}}
+          onPress={() => setShowEmotion(!showEmotion)}
           style={styles.iconWrap}
         >
-          <Icon type='iconbiaoqing' color='#666' size={pxToDp(20)} />
+          <Icon type='iconbiaoqing' color={showEmotion ? '#FEAB00' : '#666'} size={pxToDp(24)} />
         </TouchableOpacity>
       </View>
+      {showEmotion && (
+        <Emotion onPress={handlePressEmotion} />
+      )}
     </View>
   );
 }

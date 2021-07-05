@@ -19,7 +19,7 @@ export default StyleSheet.create({
   locationWrap: {
     alignItems: "flex-end",
     justifyContent: 'center',
-    paddingVertical: pxToDp(10),
+    paddingVertical: pxToDp(5),
     paddingHorizontal: pxToDp(25)
   },
   locationContainer: {
