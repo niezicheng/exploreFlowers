@@ -13,6 +13,7 @@ const Emotion = (props) => {
       keyboardShouldPersistTaps="handle"
       contentContainerStyle={{ flexDirection:"row", flexWrap:"wrap" }}
       showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
     >
       {EMOTION_ARR.map((v, i) => (
         <TouchableOpacity

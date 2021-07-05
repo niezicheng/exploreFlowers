@@ -37,11 +37,11 @@ export default {
 
 
     return instance.get(url, {
+      ...options,
       headers: {
         'Authorization': `Bearer ${token}`,
         ...headers,
       },
-      ...options,
       params: data,
     })
   },
@@ -51,11 +51,11 @@ export default {
     const headers = options.headers || {};
 
     return instance.post(url, data, {
+      ...options,
       headers: {
         'Authorization': `Bearer ${token}`,
         ...headers,
-      },
-      ...options
+      }
     })
   },
 }

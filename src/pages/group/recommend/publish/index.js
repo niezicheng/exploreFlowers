@@ -8,6 +8,8 @@ import Icon from '../../../../components/Icon';
 import Emotion from '../../../../components/Emotion';
 import Toast from '../../../../utils/Toast';
 import Geo from '../../../../utils/Geo';
+import request from '../../../../utils/request';
+import { QZ_IMG_UPLOAD } from '../../../../utils/pathMap';
 import { pxToDp } from '../../../../utils/stylesKits';
 import styles from './style';
 
@@ -41,7 +43,36 @@ const Publish = () => {
   const [showEmotion, setShowEmotion] = useState(false); // 是否显示表情节点
 
   // 发布动态信息
-  const handlePublish = () => {}
+  const handlePublish = async () => {
+    // 对数据(文本内容、图片、位置信息)做验证
+    // const { location, longitude, latitude } = data;
+    // if (!inputValue) {
+    //   Toast.message('发布内容不能为空', 1000, 'center');
+    //   return;
+    // }
+    // if (!location || !longitude || !latitude) {
+    //   Toast.message('请获取当前定位信息', 1000, 'center');
+    //   return;
+    // }
+
+    // 将选择的图片上传到对应的接口，接口返回图片在线地址
+    const params = new FormData();
+    tempImgList.forEach(v => {
+      const imgObj = {
+        uri: `file://${v.path}`,
+        name: v.fileName,
+        type: 'application/octet-stream'
+      };
+      params.append('images', imgObj);
+    })
+
+    // 将数据结合图片提交给后台发帖接口
+    const res = await request.privatePost(QZ_IMG_UPLOAD, params, {
+      headers: { 'Content-type': 'multipart/form-data;charset=utf-8' }
+    });
+    console.log(res, 'res========')
+    // 发帖成功，返回推荐页面
+  }
 
   // 获取当前定位信息
   const getLocation = async () => {
@@ -74,7 +105,8 @@ const Publish = () => {
 
     ImagePicker.showImagePicker(options, (response) => {
       console.log('===============');
-      console.log('Response = ', response);
+      const {data, ...other }  = response
+      console.log('Response = ', other);
       console.log('===============');
 
       if (response.didCancel) {
@@ -99,7 +131,7 @@ const Publish = () => {
     const imgDelete = () => {
       tempImgList.splice(index, 1);
       setTempImgList(tempImgList);
-      Toast.small('删除成功');
+      Toast.smile('删除成功');
     }
 
     const options = [{
