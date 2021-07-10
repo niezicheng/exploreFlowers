@@ -27,6 +27,7 @@ import styles from './style';
 //   ]
 // }
 
+// 发帖动态信息
 const Publish = () => {
   const [inputValue, setInputValue] = useState(''); // 输入框内容
   const [data, setData] = useState({
@@ -66,11 +67,17 @@ const Publish = () => {
       params.append('images', imgObj);
     })
 
-    // 将数据结合图片提交给后台发帖接口
-    const res = await request.privatePost(QZ_IMG_UPLOAD, params, {
-      headers: { 'Content-type': 'multipart/form-data;charset=utf-8' }
-    });
-    console.log(res, 'res========')
+    console.log(params, 'params')
+
+    // 将数据结合图片提交给后台发帖接口 --- [Error: Network Error]
+    // const res = await request.privatePost(QZ_IMG_UPLOAD, params, {
+    //   headers: { 'Content-type': 'multipart/form-data;charset=utf-8' }
+    // });
+    // console.log(res, 'res========')
+
+    // request.privatePost(QZ_IMG_UPLOAD, params, {
+    //   headers: { 'Content-type': 'multipart/form-data;charset=utf-8' }
+    // }).then(res => console.log(res, '-=-=-=-=-=-=res'), err => console.log(err, '-=-=-=-=-error'))
     // 发帖成功，返回推荐页面
   }
 
