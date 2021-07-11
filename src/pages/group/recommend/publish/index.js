@@ -9,7 +9,7 @@ import Emotion from '../../../../components/Emotion';
 import Toast from '../../../../utils/Toast';
 import Geo from '../../../../utils/Geo';
 import request from '../../../../utils/request';
-import { QZ_IMG_UPLOAD } from '../../../../utils/pathMap';
+import { QZ_IMG_UPLOAD, QZ_DT_PUBLISH } from '../../../../utils/pathMap';
 import { pxToDp } from '../../../../utils/stylesKits';
 import styles from './style';
 
@@ -28,7 +28,7 @@ import styles from './style';
 // }
 
 // 发帖动态信息
-const Publish = () => {
+const Publish = (props) => {
   const [inputValue, setInputValue] = useState(''); // 输入框内容
   const [data, setData] = useState({
     textContent: '', // 发布内容
@@ -43,42 +43,77 @@ const Publish = () => {
 
   const [showEmotion, setShowEmotion] = useState(false); // 是否显示表情节点
 
+  // 上传图片
+  const uploadImage = async () => {
+    // 将选择的图片上传到对应的接口，接口返回图片在线地址
+    const params = new FormData();
+    if (tempImgList.length) {
+      tempImgList.forEach(v => {
+        const imgObj = {
+          uri: `file://${v.path}`,
+          name: v.fileName,
+          type: 'application/octet-stream'
+        };
+        params.append('images', imgObj);
+      })
+
+      // 将数据结合图片提交给后台发帖接口 --- [Error: Network Error]
+      // const res = await request.privatePost(QZ_IMG_UPLOAD, params, {
+      //   headers: { 'Content-type': 'multipart/form-data;charset=utf-8' }
+      // });
+
+      // 目前接口好像有错误不能获取对应的结果信息
+      // if (res && res.code === '10000') {
+      //   return Promise.resolve(res.data.map(v => ({
+      //     headImgShortPath: v.headImgShortPath
+      //   })));
+      // } else {
+        return Promise.resolve([]);
+      // }
+    } else {
+      return Promise.resolve([]);
+    }
+  }
+
   // 发布动态信息
   const handlePublish = async () => {
     // 对数据(文本内容、图片、位置信息)做验证
-    // const { location, longitude, latitude } = data;
-    // if (!inputValue) {
-    //   Toast.message('发布内容不能为空', 1000, 'center');
-    //   return;
-    // }
-    // if (!location || !longitude || !latitude) {
-    //   Toast.message('请获取当前定位信息', 1000, 'center');
-    //   return;
-    // }
+    const { location, longitude, latitude } = data;
+    if (!inputValue) {
+      Toast.message('发布内容不能为空', 1000, 'center');
+      return;
+    }
+    if (!location || !longitude || !latitude) {
+      Toast.message('请获取当前定位信息', 1000, 'center');
+      return;
+    }
 
-    // 将选择的图片上传到对应的接口，接口返回图片在线地址
-    const params = new FormData();
-    tempImgList.forEach(v => {
-      const imgObj = {
-        uri: `file://${v.path}`,
-        name: v.fileName,
-        type: 'application/octet-stream'
-      };
-      params.append('images', imgObj);
-    })
+    // const imageContent = await uploadImage();
 
-    console.log(params, 'params')
-
-    // 将数据结合图片提交给后台发帖接口 --- [Error: Network Error]
-    // const res = await request.privatePost(QZ_IMG_UPLOAD, params, {
-    //   headers: { 'Content-type': 'multipart/form-data;charset=utf-8' }
+    // 内部更新 imageContent 状态是异步的
+    // setData({
+    //   ...data,
+    //   textContent: inputValue,
+    //   imageContent,
     // });
-    // console.log(res, 'res========')
 
-    // request.privatePost(QZ_IMG_UPLOAD, params, {
-    //   headers: { 'Content-type': 'multipart/form-data;charset=utf-8' }
-    // }).then(res => console.log(res, '-=-=-=-=-=-=res'), err => console.log(err, '-=-=-=-=-error'))
-    // 发帖成功，返回推荐页面
+    // const res = request.privatePost(QZ_DT_PUBLISH, {
+    //   ...data,
+    //   textContent: inputValue,
+    //   imageContent,
+    // });
+    // // 目前后台接口返回 status 404 报错
+    // if (res && res.code === '10000') {
+      // 发帖成功，返回推荐页面
+      Toast.smile('发布动态成功');
+      setTimeout(() => {
+        // native 或 goBack 跳转都是错误的
+        // 返回上一页或之前打开的路由页面是不会重新获取最新的数据请求信息
+        props.navigation.reset({
+          routes: [{ name: 'Tabbar', params: { pagename: 'group' } }]
+        });
+      }, 2000);
+    // }
   }
 
   // 获取当前定位信息

@@ -12,7 +12,11 @@ import My from './pages/my';
 import JMessage from './utils/JMessage';
 
 const TabBar = (props) => {
-  const [selectedTab, setSelectedTab] = useState('group');
+  let selectTab = 'friend';
+  if (props.route.params && props.route.params.pagename) {
+    selectTab = props.route.params.pagename;
+  }
+  const [selectedTab, setSelectedTab] = useState(selectTab);
 
   useEffect(() => {
     (async () => {
