@@ -23,9 +23,11 @@ export default StyleSheet.create({
     color: '#777',
     fontSize: pxToDp(12),
   },
-  contentText: {
-    paddingVertical: pxToDp(8),
-    color: '#666',
+  contentView: {
+    marginTop: pxToDp(8),
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
   },
   imgWrap: {
     flexDirection: 'row',

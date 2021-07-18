@@ -109,6 +109,7 @@ const Publish = (props) => {
       setTimeout(() => {
         // native 或 goBack 跳转都是错误的
         // 返回上一页或之前打开的路由页面是不会重新获取最新的数据请求信息
+        // 重新设置对应的路由页面请求
         props.navigation.reset({
           routes: [{ name: 'Tabbar', params: { pagename: 'group' } }]
         });

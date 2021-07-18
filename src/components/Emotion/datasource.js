@@ -213,4 +213,4 @@ export const EMOTIONS_ZHCN = {
 
 // [{key:"/{weixiao}", value: require('./emotions/weixiao.png')}]
 
-export const EMOTION_ARR = Object.keys(EMOTIONS_DATA).map(key=>({key: key,value: EMOTIONS_DATA[key]}))
+export const EMOTION_ARR = Object.keys(EMOTIONS_DATA).map(key=>({key: key, value: EMOTIONS_DATA[key]}))

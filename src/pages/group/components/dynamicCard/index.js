@@ -11,6 +11,7 @@ const DynamicCard = (props) => {
   const {
     user,
     handelMore,
+    renderRichText,
     style,
   } = props;
 
@@ -61,7 +62,7 @@ const DynamicCard = (props) => {
           </TouchableOpacity>
         )}
       </View>
-      <Text style={styles.contentText}>{user.content}</Text>
+      <View style={styles.contentView}>{renderRichText(user.content)}</View>
       <View style={styles.imgWrap}>
         {user.images.map((imgScr, index) => (
           <TouchableOpacity
@@ -80,12 +81,12 @@ const DynamicCard = (props) => {
         <Text style={{ color: '#666' }}>{date(user.create_time).fromNow()}</Text>
       </View>
       <Modal visible={visible} transparent>
-          <ImageViewer
-            imageUrls={imgUrls}
-            index={current}
-            onClick={() => setVisible(false)}
-          />
-        </Modal>
+        <ImageViewer
+          imageUrls={imgUrls}
+          index={current}
+          onClick={() => setVisible(false)}
+        />
+      </Modal>
     </View>
   )
 }
