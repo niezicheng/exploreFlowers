@@ -62,7 +62,11 @@ const DynamicCard = (props) => {
           </TouchableOpacity>
         )}
       </View>
-      <View style={styles.contentView}>{renderRichText(user.content)}</View>
+      {renderRichText ? (
+        <View style={styles.contentView}>{renderRichText(user.content)}</View>
+      ) : (
+        <Text style={styles.contentText}>{user.content}</Text>
+      )}
       <View style={styles.imgWrap}>
         {user.images.map((imgScr, index) => (
           <TouchableOpacity

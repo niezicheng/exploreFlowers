@@ -29,6 +29,10 @@ export default StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'center',
   },
+  contentText: {
+    paddingVertical: pxToDp(8),
+    color: '#666',
+  },
   imgWrap: {
     flexDirection: 'row',
     flexWrap: 'wrap',

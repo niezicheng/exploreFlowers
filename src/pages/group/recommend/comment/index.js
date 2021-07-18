@@ -11,6 +11,8 @@ import { pxToDp } from '../../../../utils/stylesKits';
 import date from '../../../../utils/date';
 import styles from './style';
 import Toast from '../../../../utils/Toast';
+import validator from '../../../../utils/validator';
+import { EMOTIONS_DATA } from '../../../../components/Emotion/datasource';
 
 // {
 //   "cid":253,
@@ -135,11 +137,34 @@ const Comment = (props) => {
     }
   }
 
+  // 渲染富文本内容
+  const renderRichText = (text) => {
+    const list = validator.renderRichText(text);
+
+    return (list.map((v, i) => {
+      if (v.text) {
+        return (
+          <Text key={i} style={{ color: '#666' }}>{v.text}</Text>
+        );
+      } else if (v.image) {
+        return (
+          <Image
+            key={i}
+            style={{ width: pxToDp(25), height: pxToDp(25) }}
+            source={EMOTIONS_DATA[v.image]}
+          />
+        );
+      } else {
+        return null;
+      }
+    }))
+  }
+
   return (
     <>
       <NavHerder title='最新评论' />
       <View style={styles.container}>
-        <DynamicCard user={user} />
+        <DynamicCard user={user} renderRichText={renderRichText} />
         <View style={styles.newCommentWrap}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text>最新评论</Text>
