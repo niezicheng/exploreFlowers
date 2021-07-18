@@ -1,4 +1,5 @@
 import JMessage from "jmessage-react-plugin";
+import Toast from './Toast';
 
 export default {
   // 初始化
@@ -96,6 +97,20 @@ export default {
         resolve,
         reject,
       )
+    })
+  },
+
+  /**
+   * 获取当前登录用户的未读消息
+   * @returns
+   */
+  getConversations() {
+    Toast.showLoading('获取中...')
+    return new Promise((resolve, reject) => {
+      JMessage.getConversations(res => {
+        Toast.hideLoading();
+        resolve(res);
+      }, reject);
     })
   }
 
