@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { NavigationContext } from '@react-navigation/native'
 import NavHeader from '../../components/NavHeader';
 import Icon from '../../components/Icon';
 import { pxToDp } from '../../utils/stylesKits';
@@ -11,6 +12,7 @@ import styles from './style';
 
 const Message = () => {
   const [list, setList] = useState([]);
+  const context = useContext(NavigationContext);
 
   useEffect(() => {
     (async () => {
@@ -61,7 +63,7 @@ const Message = () => {
   }]
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <NavHeader
         leftExtra={<View />}
         rightExtra={rightExtra()}
@@ -80,9 +82,13 @@ const Message = () => {
           </View>
         ))}
       </View>
-      <View>
+      <ScrollView style={{ flex: 1 }}>
         {list.map((v, i) => (
-          <View key={i} style={styles.itemWrap}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            key={i} style={styles.itemWrap}
+            onPress={() => context.navigate('Chat', v.user)}
+          >
             <Image
               source={{ uri: `${BASE_URI}${v.user.header}` || DEFAULT_IMG }}
               style={styles.avatar}
@@ -97,9 +103,9 @@ const Message = () => {
                 <Text style={{ color: '#FFF' }}>{v.unreadCount}</Text>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         ))}
-      </View>
+      </ScrollView>
     </View>
   )
 }

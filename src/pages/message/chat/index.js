@@ -110,7 +110,6 @@ export default class TestRNIMUI extends Component {
       if (v.from.username === this.props.UserStore.user.guid) {
         // 当前消息是属于发送者的
         message.isOutgoing = true;
-        message.fromUser.avatarPath;
         message.fromUser.avatarPath = `${BASE_URI}${this.props.UserStore.user.header}` || "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1534926548887&di=f107f4f8bd50fada6c5770ef27535277&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F11%2F67%2F23%2F69i58PICP37.jpg";
       } else {
         message.isOutgoing = false;
@@ -252,6 +251,7 @@ export default class TestRNIMUI extends Component {
 
     message.msgType = 'text';
     message.text = text;
+    message.fromUser.avatarPath = `${BASE_URI}${this.props.UserStore.user.header}` || "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1534926548887&di=f107f4f8bd50fada6c5770ef27535277&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F11%2F67%2F23%2F69i58PICP37.jpg";
 
     AuroraIController.appendMessages([message]);
     // 极光发送文本
