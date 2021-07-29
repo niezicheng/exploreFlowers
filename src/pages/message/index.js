@@ -99,9 +99,11 @@ const Message = () => {
             </View>
             <View style={styles.itemRight}>
               <Text style={styles.text}>{date(v.latestMessage.createTime).fromNow()}</Text>
-              <View style={styles.badge}>
-                <Text style={{ color: '#FFF' }}>{v.unreadCount}</Text>
-              </View>
+              {v.unreadCount > 0 && (
+                <View style={styles.badge}>
+                  <Text style={{ color: '#FFF' }}>{v.unreadCount}</Text>
+                </View>
+              )}
             </View>
           </TouchableOpacity>
         ))}
