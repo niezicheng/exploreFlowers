@@ -4,15 +4,24 @@ import { pxToDp } from '../../../../utils/stylesKits'
 export default StyleSheet.create({
   imgBg: {
     height: pxToDp(60),
-    paddingHorizontal: pxToDp(80),
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconWrap: {
+    position: 'absolute',
+    left: pxToDp(15),
+    alignItems: 'center',
+  },
+  tabsWrap: {
+    width: '70%',
+    height: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
   },
   tabContainer: {
-    height: '100%',
     justifyContent: 'center',
     borderBottomColor: '#FFFFFF',
-
   },
   tabTitle: {
     color: '#FFFFFF',

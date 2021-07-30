@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StatusBar, ScrollView, RefreshControl } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { ListItem } from 'react-native-elements';
+import { NavigationContext } from '@react-navigation/native';
 import Icon from '../../components/Icon';
 import { pxToDp } from '../../utils/stylesKits';
 import UserCard from './components/userCard';
@@ -13,6 +14,7 @@ import styles from './style';
 
 const My = (props) => {
   const user = props.UserStore.user;
+  const context = useContext(NavigationContext);
 
   const [city, setCity] = useState();
   const [countObj, setCountObj] = useState({
@@ -25,16 +27,16 @@ const My = (props) => {
 
   const data = [{
     count: countObj.eachLoveCount,
-    name: '相互关注',
-    onPress: () => {},
+    name: '互相关注',
+    onPress: () => context.navigate('Follow', 0),
   }, {
     count: countObj.loveCount,
     name: '喜欢',
-    onPress: () => {},
+    onPress: () => context.navigate('Follow', 1),
   }, {
     count: countObj.fanCount,
     name: '粉丝',
-    onPress: () => {},
+    onPress: () => context.navigate('Follow', 2),
   }];
 
   const contentData = [{
