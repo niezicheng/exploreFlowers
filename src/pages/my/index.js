@@ -1,25 +1,38 @@
-import React from 'react';
-import { View, Text, StatusBar } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StatusBar, ScrollView, RefreshControl } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { ListItem } from 'react-native-elements';
 import Icon from '../../components/Icon';
 import { pxToDp } from '../../utils/stylesKits';
 import UserCard from './components/userCard';
 import ItemCard from './components/itemCard';
+import Geo from '../../utils/Geo';
+import { MY_COUNTS } from '../../utils/pathMap';
+import request from '../../utils/request';
 import styles from './style';
 
 const My = (props) => {
   const user = props.UserStore.user;
+
+  const [city, setCity] = useState();
+  const [countObj, setCountObj] = useState({
+    fanCount: 0, // 粉丝数量
+    loveCount: 0, // 喜欢数量
+    eachLoveCount: 0, // 相互关注数量
+  });
+
+  const [refreshing, setRefreshing] = useState(false);
+
   const data = [{
-    count: 1,
+    count: countObj.eachLoveCount,
     name: '相互关注',
     onPress: () => {},
   }, {
-    count: 6,
+    count: countObj.loveCount,
     name: '喜欢',
     onPress: () => {},
   }, {
-    count: 300,
+    count: countObj.fanCount,
     name: '粉丝',
     onPress: () => {},
   }];
@@ -40,19 +53,65 @@ const My = (props) => {
     title: '客服在线',
     iconType: 'iconkefu',
     iconColor: 'blue',
-  }]
+  }];
+
+  useEffect(() => {
+    getCityByLocation();
+    getMyCount();
+  }, [])
+
+  /**
+   * 获取当前定位信息
+   */
+  const getCityByLocation = async() => {
+    const res = await Geo.getCityByLocation();
+    setCity(res.regeocode.addressComponent.city);
+  }
+
+  /**
+   * 获取关注、喜欢和粉丝等信息数量
+   */
+  const getMyCount = async() => {
+    setRefreshing(true);
+    const res = await request.privateGet(MY_COUNTS);
+
+    if (res && res.code === '10000') {
+      console.log(res)
+      setCountObj({
+        fanCount: res.data[0].cout,
+        loveCount: res.data[1].cout,
+        eachLoveCount: res.data[2].cout,
+      });
+      setRefreshing(false);
+    }
+  }
+
+  /**
+   * 下拉刷新事件
+   */
+  const onRefresh = async() => {
+    getMyCount();
+  }
 
   const getMidBtm = () => {
     return (
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Icon type='iconlocation' color='#FFF' size={pxToDp(14)} />
-        <Text style={{ fontSize: pxToDp(14), color: '#FFF', marginLeft: pxToDp(5) }}>杭州</Text>
+        <Text style={{ fontSize: pxToDp(14), color: '#FFF', marginLeft: pxToDp(5) }}>{city}</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      refreshControl={(
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      )}
+      contentContainerStyle={styles.container}
+    >
       <View style={styles.headerWrap}>
         <StatusBar backgroundColor="transparent" translucent />
         <UserCard
@@ -81,7 +140,7 @@ const My = (props) => {
           />
         ))}
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
