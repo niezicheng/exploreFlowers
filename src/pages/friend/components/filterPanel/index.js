@@ -6,7 +6,6 @@ import Icon from '../../../../components/Icon';
 import Button  from '../../../../components/LGButton';
 import cityJson from '../../../../city.json';
 import styles from './style';
-import style from '../header/style';
 
 const sexArray = ['男', '女'];
 const MapSex = {

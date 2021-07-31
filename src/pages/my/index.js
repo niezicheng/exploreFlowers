@@ -45,7 +45,7 @@ const My = (props) => {
     title: '谁看过我',
     iconType: 'iconshuikanguowo',
     iconColor: 'red',
-    onPress: () => context.navigate('Trends')
+    onPress: () => context.navigate('Visitors')
   }, {
     title: '通用设置',
     iconType: 'iconshezhi',

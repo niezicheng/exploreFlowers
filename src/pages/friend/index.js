@@ -122,7 +122,7 @@ const Friend = () => {
       )}
     >
       <>
-        <Visitors />
+        <Visitors isSkip />
         <View style={styles.container}>
           <PerfectPerson />
           <View style={styles.recommendWrap}>

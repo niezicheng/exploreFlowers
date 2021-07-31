@@ -6,10 +6,8 @@ import NavHeader from '../../../components/NavHeader';
 import Icon from '../../../components/Icon';
 import LoadingText from '../../../components/loadingText';
 import request from '../../../utils/request';
-import { QZ_DT_DZ, MY_TRENDS  } from '../../../utils/pathMap';
+import { MY_TRENDS  } from '../../../utils/pathMap';
 import { pxToDp } from '../../../utils/stylesKits';
-import Toast from '../../../utils/Toast';
-import JMessage from '../../../utils/JMessage';
 import DynamicCard from '../../group/components/dynamicCard';
 import styles from './style';
 

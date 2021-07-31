@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image } from 'react-native';
+import React, { useEffect, useState, useContext } from 'react';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { NavigationContext } from '@react-navigation/native'
 import request from '../../../../utils/request';
 import { FRIENDS_VISITORS, BASE_URI } from '../../../../utils/pathMap';
 import styles from './style';
@@ -16,8 +17,13 @@ import styles from './style';
 // agediff: -2
 // fateValue: 62
 
-const Visitors = () => {
+const Visitors = (props) => {
+  const {
+    showRightArrow = true,
+    isSkip = false,
+  } = props;
   const [visitors, setVisitors] = useState([]);
+  const context = useContext(NavigationContext)
 
   useEffect(() => {
     (async () => {
@@ -27,7 +33,11 @@ const Visitors = () => {
   }, [])
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      activeOpacity={isSkip ? 0.8 : 1}
+      onPress={isSkip ? () => context.navigate('Visitors') : () => {}}
+      style={styles.container}
+    >
       <Text style={styles.descText}>最近有{visitors.length}人来访问, 快去查看...</Text>
       <View style={styles.imgWrap}>
         {visitors.map((visitor, index) => (
@@ -37,9 +47,11 @@ const Visitors = () => {
             source={{ uri: `${BASE_URI}${visitor.header}` }}
           />
         ))}
-        <Text style={styles.rightArrow}>&gt;</Text>
+        {showRightArrow && (
+          <Text style={styles.rightArrow}>&gt;</Text>
+        )}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

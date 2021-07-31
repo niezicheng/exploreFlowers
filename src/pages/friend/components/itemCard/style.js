@@ -6,7 +6,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: pxToDp(15),
-    borderBottomColor: '#eee',
+    borderBottomColor: '#E5E5E5',
     borderBottomWidth: pxToDp(1),
   },
   avatar: {
