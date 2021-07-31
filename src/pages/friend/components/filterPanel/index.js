@@ -73,7 +73,7 @@ const FilterPanel = (props) => {
       wheelFlex: [1, 0, 0],
       pickerConfirmBtnText: "确定",
       pickerCancelBtnText: "取消",
-      pickerTitleText: "选择近期登录时间",
+      pickerTitleText: "选择学历",
       onPickerConfirm: data => {
         setState({ ...state, education: data[0] })
       }

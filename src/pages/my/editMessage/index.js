@@ -117,7 +117,7 @@ const EditMessage = (props) => {
     setGenderVisible(false)
   }
 
-  // 选择城市
+  // 更新城市
   const updateCity = () => {
     Picker.init({
       pickerData: CityJson,
@@ -128,6 +128,38 @@ const EditMessage = (props) => {
       pickerTitleText: '选择城市',
       onPickerConfirm: data => {
         onSubmit({ city: data[1] });
+      }
+    });
+    Picker.show();
+  }
+
+  // 更新学历
+  const updateXueLi = () => {
+    Picker.init({
+      pickerData: ['博士后', '博士', '硕士', '本科', '大专', '高中', '留学', '其他'],
+      selectedValue: [user.xueli],
+      wheelFlex: [1, 0, 0],
+      pickerConfirmBtnText: "确定",
+      pickerCancelBtnText: "取消",
+      pickerTitleText: "选择学历",
+      onPickerConfirm: data => {
+        onSubmit({ xueli: data[0] });
+      }
+    });
+    Picker.show();
+  }
+
+  // 更新婚姻状况
+  const updateMarry = () => {
+    Picker.init({
+      pickerData: ['单身', '订婚', '已婚'],
+      selectedValue: [user.marry],
+      wheelFlex: [1, 0, 0],
+      pickerConfirmBtnText: "确定",
+      pickerCancelBtnText: "取消",
+      pickerTitleText: "选择婚姻",
+      onPickerConfirm: data => {
+        onSubmit({ marry: data[0] });
       }
     });
     Picker.show();
@@ -207,7 +239,8 @@ const EditMessage = (props) => {
     title: '学历',
     rightElement: (
       <Text style={styles.textStyle}>{user.xueli}</Text>
-    )
+    ),
+    onPress: updateXueLi
   }, {
     title: '月收录',
     rightElement: (
@@ -222,7 +255,8 @@ const EditMessage = (props) => {
     title: '婚姻状况',
     rightElement: (
       <Text style={styles.textStyle}>{user.marry}</Text>
-    )
+    ),
+    onPress: updateMarry
   }];
 
   return (
