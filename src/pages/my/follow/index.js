@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { TouchableOpacity, Text } from 'react-native';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
+import Icon from '../../../components/Icon';
+import { pxToDp } from '../../../utils/stylesKits';
 import { MY_LIKELIST } from '../../../utils/pathMap';
 import request from '../../../utils/request';
 import CustomerBar from '../../group/components/customerBar';
-import EachLove from './eachLove';
-import Love from './love';
-import Fan from './fan';
+import TabContent from './tabContent';
+import styles from './style';
 
 export default (props) => {
   const { route: { params } } = props;
@@ -14,6 +16,42 @@ export default (props) => {
     ilikelist: [], // 喜欢数据
     likemelist: [], // 粉丝数据
   });
+
+  // 喜欢各项卡片右边展示信息
+  const likeExtra = () => {
+    return (
+      <Icon
+        type="iconxihuan"
+        size={40}
+        color='red'
+        style={styles.likeIcon}
+      />
+    );
+  }
+
+  // 相互关注各项卡片右边展示信息
+  const eachLikeExtra = () => {
+    return (
+      <TouchableOpacity activeOpacity={0.8} style={styles.eachLikeWrap}>
+        <Icon type="iconjia" size={pxToDp(16)} color="#666" />
+        {/* <Icon type="iconhuxiangguanzhu" size={pxToDp(16)} color="#666" /> */}
+        <Text style={styles.textStyle}>已关注</Text>
+      </TouchableOpacity>
+    );
+  }
+
+  const TabsContentData = [{
+    label: '互相关注',
+    data: data.likeeachlist,
+    rightExtra: eachLikeExtra,
+  }, {
+    label: '喜欢',
+    data: data.ilikelist,
+    rightExtra: likeExtra,
+  }, {
+    label: '粉丝',
+    data: data.likemelist,
+  }]
 
   useEffect(() => {
     getMyLikesData();
@@ -30,13 +68,18 @@ export default (props) => {
 
   return (
     <ScrollableTabView
-      initialPage={1}
+      initialPage={params}
       locked
       renderTabBar={() => <CustomerBar showBackIcon />}
     >
-      <EachLove tabLabel='互相关注' data={data.likeeachlist} />
-      <Love tabLabel='喜欢' data={data.ilikelist} />
-      <Fan tabLabel='粉丝' data={data.likemelist} />
+      {TabsContentData.map((tabContent, index) => (
+        <TabContent
+          key={index}
+          tabLabel={tabContent.label}
+          data={tabContent.data}
+          rightExtra={tabContent.rightExtra}
+        />
+      ))}
     </ScrollableTabView>
   );
 }

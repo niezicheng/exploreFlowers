@@ -70,7 +70,7 @@ const DynamicCard = (props) => {
           </View>
         ))}
       </View>
-      {rightExtra}
+      {rightExtra && rightExtra()}
     </View>
   )
 }
