@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { View, Image, Text } from 'react-native';
+import React, { useState, useReducer } from 'react';
+import { View, Image, Text, TextInput } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { ListItem, Overlay } from 'react-native-elements';
-import { TextInput } from 'react-native-gesture-handler';
 import ImagePicker from 'react-native-image-crop-picker';
+import DatePicker from 'react-native-datepicker';
 import NavHeader from '../../../components/NavHeader';
 import date from '../../../utils/date';
 import { BASE_URI, ACCOUNT_CHECKHEADIMAGE, MY_SUBMITUSERINFO, MY_INFO } from '../../../utils/pathMap';
 import request from '../../../utils/request';
 import Toast from '../../../utils/Toast';
+import { formatDate } from '../../../utils';
 import styles from './style';
 import { pxToDp } from '../../../utils/stylesKits';
 
@@ -50,6 +51,7 @@ const defaultUser = {
 const EditMessage = (props) => {
   const { user = defaultUser } = props.UserStore;
   const [visible, setVisible] = useState(false);
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
 
   // 更新头像
   const uploadHeadImage = (image) => {
@@ -101,6 +103,12 @@ const EditMessage = (props) => {
     setVisible(false);
   }
 
+  // 更新生日
+  const updateBirthday = (birthday) => {
+    console.log(birthday, 'opoppopo')
+    onSubmit({ birthday });
+  }
+
   // 完成编辑进行更新操作
   const onSubmit = async(user) => {
     const res = await request.privatePost(MY_SUBMITUSERINFO, user);
@@ -113,11 +121,31 @@ const EditMessage = (props) => {
       if (res2 && res2.code === '10000') {
         // 将用户信息存入 mobx 中
         props.UserStore.setUser(res2.data);
+        // 刷新页面获取最新 UserStore 内的数据信息
+        forceUpdate();
       }
 
       return Promise.resolve(res);
     }
   }
+
+  // 生日弹框元素
+  const birthdayDom = () => (
+    <DatePicker
+      androidMode="spinner"
+      style={{ width: '100%' }}
+      date={date(user.birthday).format('YYYY-MM-DD')}
+      mode="date"
+      placeholder="设置生日"
+      format="YYYY-MM-DD"
+      minDate="1990-01-01"
+      maxDate={formatDate(new Date())}
+      confirmBtnText="确认"
+      cancelBtnText="取消"
+      onDateChange={updateBirthday}
+      style={{ position: 'absolute', width: '100%', opacity: 0 }}
+    />
+  );
 
   // 展示数据源信息
   const data = [{
@@ -137,9 +165,8 @@ const EditMessage = (props) => {
     onPress: () => setVisible(true)
   }, {
     title: '生日',
-    rightElement: (
-      <Text style={styles.textStyle}>{date(user.birthday).format('YYYY-MM-DD')}</Text>
-    )
+    rightElement: birthdayDom(),
+    rightTitle: date(user.birthday).format('YYYY-MM-DD'),
   }, {
     title: '性别',
     rightElement: (
@@ -180,16 +207,17 @@ const EditMessage = (props) => {
           key={i}
           title={v.title}
           rightElement={v.rightElement}
+          rightTitle={v.rightTitle}
           bottomDivider={i !== data.length - 1}
           chevron
           onPress={v.onPress}
+          rightTitleStyle={[styles.textStyle, { marginRight: -18 }]}
           titleStyle={styles.textStyle}
         />
       ))}
       <Overlay visible={visible} onBackdropPress={() => setVisible(false)}>
         <TextInput
           placeholder="修改昵称"
-          // value={nickName}
           onSubmitEditing={updateNickName}
           style={{ width: pxToDp(300) }}
         />
