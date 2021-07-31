@@ -4,6 +4,8 @@ import { inject, observer } from 'mobx-react';
 import { ListItem, Overlay } from 'react-native-elements';
 import ImagePicker from 'react-native-image-crop-picker';
 import DatePicker from 'react-native-datepicker';
+import Picker from 'react-native-picker';
+import CityJson from '../../../city.json';
 import NavHeader from '../../../components/NavHeader';
 import date from '../../../utils/date';
 import { BASE_URI, ACCOUNT_CHECKHEADIMAGE, MY_SUBMITUSERINFO, MY_INFO } from '../../../utils/pathMap';
@@ -115,6 +117,22 @@ const EditMessage = (props) => {
     setGenderVisible(false)
   }
 
+  // 选择城市
+  const updateCity = () => {
+    Picker.init({
+      pickerData: CityJson,
+      selectedValue: ['北京', '北京'],
+      wheelFlex: [1, 1, 1], // 显示省、市和区
+      pickerConfirmBtnText: '确定',
+      pickerCancelBtnText: '取消',
+      pickerTitleText: '选择城市',
+      onPickerConfirm: data => {
+        onSubmit({ city: data[1] });
+      }
+    });
+    Picker.show();
+  }
+
   // 完成编辑进行更新操作
   const onSubmit = async(user) => {
     const res = await request.privatePost(MY_SUBMITUSERINFO, user);
@@ -183,7 +201,8 @@ const EditMessage = (props) => {
     title: '现居城市',
     rightElement: (
       <Text style={styles.textStyle}>{user.city}</Text>
-    )
+    ),
+    onPress: updateCity
   }, {
     title: '学历',
     rightElement: (
