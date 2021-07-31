@@ -50,7 +50,8 @@ const defaultUser = {
 
 const EditMessage = (props) => {
   const { user = defaultUser } = props.UserStore;
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false); // 昵称 overlay 显隐
+  const [genderVisible, setGenderVisible] = useState(false); // 昵称 overlay 显隐
   const [, forceUpdate] = useReducer(x => x + 1, 0);
 
   // 更新头像
@@ -105,8 +106,13 @@ const EditMessage = (props) => {
 
   // 更新生日
   const updateBirthday = (birthday) => {
-    console.log(birthday, 'opoppopo')
     onSubmit({ birthday });
+  }
+
+  // 更新性别
+  const updateGender = async(gender) => {
+    await onSubmit({ gender });
+    setGenderVisible(false)
   }
 
   // 完成编辑进行更新操作
@@ -171,7 +177,8 @@ const EditMessage = (props) => {
     title: '性别',
     rightElement: (
       <Text style={styles.textStyle}>{user.gender}</Text>
-    )
+    ),
+    onPress: () => setGenderVisible(true)
   }, {
     title: '现居城市',
     rightElement: (
@@ -221,6 +228,12 @@ const EditMessage = (props) => {
           onSubmitEditing={updateNickName}
           style={{ width: pxToDp(300) }}
         />
+      </Overlay>
+      <Overlay visible={genderVisible} onBackdropPress={() => setGenderVisible(false)}>
+        <View style={{ width: pxToDp(300), height: pxToDp(60), justifyContent: 'space-evenly' }}>
+          <Text style={styles.textStyle} onPress={() => updateGender('男')}>男</Text>
+          <Text style={styles.textStyle} onPress={() => updateGender('女')}>女</Text>
+        </View>
       </Overlay>
     </View>
   );
