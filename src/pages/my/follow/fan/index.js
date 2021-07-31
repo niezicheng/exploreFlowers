@@ -6,11 +6,10 @@ import styles from './style';
 const Fan = () => {
   return (
     <View style={styles.container}>
-      <View style={styles.searchBarWrap}>
-        <SearchBar
-          placeholder='搜索用户'
-        />
-      </View>
+      <SearchBar
+        placeholder='搜索用户'
+        style={styles.searchBarWrap}
+      />
       <Text>Fan</Text>
     </View>
   );

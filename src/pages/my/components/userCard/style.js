@@ -3,7 +3,7 @@ import { pxToDp } from '../../../../utils/stylesKits'
 
 export default StyleSheet.create({
   container: {
-    flex: 1,
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -18,7 +18,7 @@ export default StyleSheet.create({
   // middle
   headerMiddle: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     marginLeft: pxToDp(15),
   },
   nickName: {
@@ -36,5 +36,16 @@ export default StyleSheet.create({
   textColor: {
     color: '#777',
     fontSize: pxToDp(12),
+  },
+
+  // city
+  cityWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  cityText: {
+    fontSize: pxToDp(14),
+    color: '#FFF',
+    marginLeft: pxToDp(5),
   }
 })

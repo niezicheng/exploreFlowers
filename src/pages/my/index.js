@@ -16,7 +16,6 @@ const My = (props) => {
   const user = props.UserStore.user;
   const context = useContext(NavigationContext);
 
-  const [city, setCity] = useState();
   const [countObj, setCountObj] = useState({
     fanCount: 0, // 粉丝数量
     loveCount: 0, // 喜欢数量
@@ -58,17 +57,8 @@ const My = (props) => {
   }];
 
   useEffect(() => {
-    getCityByLocation();
     getMyCount();
   }, [])
-
-  /**
-   * 获取当前定位信息
-   */
-  const getCityByLocation = async() => {
-    const res = await Geo.getCityByLocation();
-    setCity(res.regeocode.addressComponent.city);
-  }
 
   /**
    * 获取关注、喜欢和粉丝等信息数量
@@ -95,15 +85,6 @@ const My = (props) => {
     getMyCount();
   }
 
-  const getMidBtm = () => {
-    return (
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Icon type='iconlocation' color='#FFF' size={pxToDp(14)} />
-        <Text style={{ fontSize: pxToDp(14), color: '#FFF', marginLeft: pxToDp(5) }}>{city}</Text>
-      </View>
-    );
-  }
-
   return (
     <ScrollView
       refreshControl={(
@@ -118,7 +99,7 @@ const My = (props) => {
         <StatusBar backgroundColor="transparent" translucent />
         <UserCard
           user={user}
-          middleBottom={getMidBtm()}
+          showCity
           nickNameStyle={{ color: '#FFF' }}
           genAgeWrapStyle={{ backgroundColor: '#FFF', paddingHorizontal: pxToDp(5), borderRadius: pxToDp(20) }}
         />
