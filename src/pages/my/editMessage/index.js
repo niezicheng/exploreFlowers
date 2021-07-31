@@ -2,9 +2,12 @@ import { inject, observer } from 'mobx-react';
 import React from 'react';
 import { View, Image, Text } from 'react-native';
 import { ListItem } from 'react-native-elements';
+import ImagePicker from 'react-native-image-crop-picker';
 import NavHeader from '../../../components/NavHeader';
 import date from '../../../utils/date';
-import { BASE_URI } from '../../../utils/pathMap';
+import { BASE_URI, ACCOUNT_CHECKHEADIMAGE, MY_SUBMITUSERINFO, MY_INFO } from '../../../utils/pathMap';
+import request from '../../../utils/request';
+import Toast from '../../../utils/Toast';
 import styles from './style';
 
 const defaultUser = {
@@ -30,8 +33,80 @@ const defaultUser = {
   guid: "186657119781591501526289"
 }
 
+// {
+//   "header": "/upload/13828459782.png",
+//   "nickname": "雾霭朦胧",
+//   "birthday": "1997-12-19",
+//   "age": "21",
+//   "gender": "女",
+//   "city": "广州市",
+//   "address": "广州市天河区珠吉路58号",
+//   "xueli": "本科",
+//   "marry": "单身"
+// }
+
 const EditMessage = (props) => {
   const { user = defaultUser } = props.UserStore;
+
+  // 上传头像
+  const uploadHeadImage = (image) => {
+    // 构造参数发送到后台，完成头像上传
+    let formData = new FormData();
+    formData.append('headPhoto', {
+      // 本地图片地址
+      uri: image.path,
+      // 图片类型
+      type: image.mime,
+      // 图片名称 file:///store/com/pic/dsf/image.jpg
+      name: image.path.split('/').pop(),
+    });
+
+    // 执行头像上传
+    return request.privatePost(ACCOUNT_CHECKHEADIMAGE, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      }
+    })
+  }
+
+  // 选择图片
+  const selectAvatar = async() => {
+    // 获取选中后的图片
+    const image = await ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true
+    });
+
+    try {
+      const res = await uploadHeadImage(image);
+      if (res && res.code === '10000') {
+        onSubmit({ header: res.data.headImgShortPath });
+      }
+
+    } catch(e) {
+      Toast.hideLoading();
+      Toast.message('request error', 1000, 'center');
+    }
+  }
+
+  // 完成编辑进行更新操作
+  const onSubmit = async(user) => {
+    const res = request.privatePost(MY_SUBMITUSERINFO, user);
+
+    if (res && res.code === '10000') {
+      Toast.smile('更新成功');
+
+      // 刷新数据, 获取最新用户信息
+      const res2 = await request.privateGet(MY_INFO);
+      if (res2 && res2.code === '10000') {
+        // 将用户信息存入 mobx 中
+        props.UserStore.setUser(res2.data);
+      }
+
+      return Promise.resolve(res);
+    }
+  }
 
   const data = [{
     title: '头像',
@@ -40,7 +115,8 @@ const EditMessage = (props) => {
         source={{ uri: `${BASE_URI}${user.header || '/upload/13828459788.jpg'}` }}
         style={styles.avatar}
       />
-    )
+    ),
+    onPress: selectAvatar
   }, {
     title: '昵称',
     rightElement: (
@@ -81,7 +157,7 @@ const EditMessage = (props) => {
     rightElement: (
       <Text style={styles.textStyle}>{user.marry}</Text>
     )
-  }, ]
+  }];
 
   return (
     <View style={styles.container}>
@@ -93,6 +169,7 @@ const EditMessage = (props) => {
           rightElement={v.rightElement}
           bottomDivider={i !== data.length - 1}
           chevron
+          onPress={v.onPress}
           titleStyle={styles.textStyle}
         />
       ))}
