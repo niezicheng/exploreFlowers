@@ -9,13 +9,12 @@ import LoadingText from '../../../components/loadingText';
 import request from '../../../utils/request';
 import { QZ_TJDT, QZ_DT_DZ, QZ_DT_XH, QZ_DT_BGXQ } from '../../../utils/pathMap';
 import { pxToDp } from '../../../utils/stylesKits';
-import validator from '../../../utils/validator';
-import { EMOTIONS_DATA } from '../../../components/Emotion/datasource';
-
-import styles from './style';
 import Toast from '../../../utils/Toast';
 import JMessage from '../../../utils/JMessage';
 import DynamicCard from '../components/dynamicCard';
+
+import styles from './style';
+
 
 const Recommend = (props) => {
   const context = useContext(NavigationContext);
@@ -36,29 +35,6 @@ const Recommend = (props) => {
   useEffect(() => {
     getList();
   }, [])
-
-  // 渲染富文本内容
-  const renderRichText = (text) => {
-    const list = validator.renderRichText(text);
-
-    return (list.map((v, i) => {
-      if (v.text) {
-        return (
-          <Text key={i} style={{ color: '#666' }}>{v.text}</Text>
-        );
-      } else if (v.image) {
-        return (
-          <Image
-            key={i}
-            style={{ width: pxToDp(25), height: pxToDp(25) }}
-            source={EMOTIONS_DATA[v.image]}
-          />
-        );
-      } else {
-        return null;
-      }
-    }))
-  }
 
   // 获取展示的数据信息
   const getList = async(paramsData, prevListData) => {
@@ -166,7 +142,7 @@ const Recommend = (props) => {
       <View style={styles.container}>
         <DynamicCard
           user={item}
-          renderRichText={renderRichText}
+          isRenderRichText
           handelMore={handelMore}
         />
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>

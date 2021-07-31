@@ -4,14 +4,16 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 import Icon from '../../../../components/Icon';
 import { BASE_URI } from '../../../../utils/pathMap';
 import { pxToDp } from '../../../../utils/stylesKits';
+import validator from '../../../../utils/validator';
+import { EMOTIONS_DATA } from '../../../../components/Emotion/datasource';
 import date  from '../../../../utils/date';
 import styles from './style';
 
 const DynamicCard = (props) => {
   const {
     user,
+    isRenderRichText,
     handelMore,
-    renderRichText,
     style,
   } = props;
 
@@ -25,6 +27,29 @@ const DynamicCard = (props) => {
     setImgUrls(imgUrls);
     setVisible(true);
     setCurrent(index);
+  }
+
+  // 渲染富文本内容
+  const renderRichText = (text) => {
+    const list = validator.renderRichText(text);
+
+    return (list.map((v, i) => {
+      if (v.text) {
+        return (
+          <Text key={i} style={{ color: '#666' }}>{v.text}</Text>
+        );
+      } else if (v.image) {
+        return (
+          <Image
+            key={i}
+            style={{ width: pxToDp(25), height: pxToDp(25) }}
+            source={EMOTIONS_DATA[v.image]}
+          />
+        );
+      } else {
+        return null;
+      }
+    }))
   }
 
   return (
@@ -62,7 +87,7 @@ const DynamicCard = (props) => {
           </TouchableOpacity>
         )}
       </View>
-      {renderRichText ? (
+      {isRenderRichText ? (
         <View style={styles.contentView}>{renderRichText(user.content)}</View>
       ) : (
         <Text style={styles.contentText}>{user.content}</Text>
