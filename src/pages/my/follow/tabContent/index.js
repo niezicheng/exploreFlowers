@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
+import { ScrollView } from 'react-native';
 import SearchBar from '../../../../components/SearchBar';
 import UserCard from '../../components/userCard';
 import styles from './style';
 
-const Love = (props) => {
+const TabContent = (props) => {
   const { data, rightExtra } = props;
 
   const [inputValue, setInputValue] = useState();
@@ -18,32 +18,34 @@ const Love = (props) => {
   const listData = inputValue ? data.filter(user => user.nick_name.includes(inputValue)) : data;
 
   return (
-    <View style={styles.container}>
+    <>
       <SearchBar
-        placeholder='搜索用户'
-        value={inputValue}
-        onChangeText={handleChange}
-        style={styles.searchBarWrap}
-      />
-      {listData.map((user, key) => (
-        <UserCard
-          key={key}
-          user={user}
-          showCity
-          rightExtra={rightExtra}
-          cityIconColor='#666'
-          cityTextStyle={{ color: '#666' }}
-          style={[
-            styles.userCard,
-            key !== (listData.length - 1) && {
-              borderBottomWidth: 1,
-              borderBottomColor: '#CCC',
-            }
-          ]}
+          placeholder='搜索用户'
+          value={inputValue}
+          onChangeText={handleChange}
+          style={styles.searchBarWrap}
         />
-      ))}
-    </View>
+      <ScrollView contentContainerStyle={styles.container}>
+        {listData.map((user, key) => (
+          <UserCard
+            key={key}
+            user={user}
+            showCity
+            rightExtra={rightExtra}
+            cityIconColor='#666'
+            cityTextStyle={{ color: '#666' }}
+            style={[
+              styles.userCard,
+              key !== (listData.length - 1) && {
+                borderBottomWidth: 1,
+                borderBottomColor: '#CCC',
+              }
+            ]}
+          />
+        ))}
+      </ScrollView>
+    </>
   );
 }
 
-export default Love;
+export default TabContent;
