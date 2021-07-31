@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import SearchBar from '../../../../components/SearchBar';
 import Icon from '../../../../components/Icon';
@@ -8,6 +8,8 @@ import { pxToDp } from '../../../../utils/stylesKits';
 
 const Love = (props) => {
   const { data } = props;
+
+  const [inputValue, setInputValue] = useState();
 
   // const rightExtra = () => {
   //   return (
@@ -29,13 +31,23 @@ const Love = (props) => {
     );
   }
 
+  // 搜索输入框改变事件
+  const handleChange = (text) => {
+    setInputValue(text);
+  }
+
+  // 搜索功能过滤
+  const listData = data.filter(user => user.nick_name.includes(inputValue));
+
   return (
     <View style={styles.container}>
       <SearchBar
         placeholder='搜索用户'
+        value={inputValue}
+        onChangeText={handleChange}
         style={styles.searchBarWrap}
       />
-      {data.map((user, key) => (
+      {listData.map((user, key) => (
         <UserCard
           key={key}
           user={user}
@@ -45,7 +57,7 @@ const Love = (props) => {
           cityTextStyle={{ color: '#666' }}
           style={[
             styles.userCard,
-            key !== (data.length - 1) && {
+            key !== (listData.length - 1) && {
               borderBottomWidth: 1,
               borderBottomColor: '#CCC',
             }
