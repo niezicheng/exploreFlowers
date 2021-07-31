@@ -1,7 +1,8 @@
-import { inject, observer } from 'mobx-react';
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Image, Text } from 'react-native';
-import { ListItem } from 'react-native-elements';
+import { inject, observer } from 'mobx-react';
+import { ListItem, Overlay } from 'react-native-elements';
+import { TextInput } from 'react-native-gesture-handler';
 import ImagePicker from 'react-native-image-crop-picker';
 import NavHeader from '../../../components/NavHeader';
 import date from '../../../utils/date';
@@ -9,6 +10,7 @@ import { BASE_URI, ACCOUNT_CHECKHEADIMAGE, MY_SUBMITUSERINFO, MY_INFO } from '..
 import request from '../../../utils/request';
 import Toast from '../../../utils/Toast';
 import styles from './style';
+import { pxToDp } from '../../../utils/stylesKits';
 
 const defaultUser = {
   id: 7,
@@ -47,8 +49,9 @@ const defaultUser = {
 
 const EditMessage = (props) => {
   const { user = defaultUser } = props.UserStore;
+  const [visible, setVisible] = useState(false);
 
-  // 上传头像
+  // 更新头像
   const uploadHeadImage = (image) => {
     // 构造参数发送到后台，完成头像上传
     let formData = new FormData();
@@ -90,9 +93,17 @@ const EditMessage = (props) => {
     }
   }
 
+  // 更新昵称
+  const updateNickName = async (e) => {
+    const nickname  = e.nativeEvent.text;
+    if (!nickname) return;
+    await onSubmit({ nickname });
+    setVisible(false);
+  }
+
   // 完成编辑进行更新操作
   const onSubmit = async(user) => {
-    const res = request.privatePost(MY_SUBMITUSERINFO, user);
+    const res = await request.privatePost(MY_SUBMITUSERINFO, user);
 
     if (res && res.code === '10000') {
       Toast.smile('更新成功');
@@ -108,6 +119,7 @@ const EditMessage = (props) => {
     }
   }
 
+  // 展示数据源信息
   const data = [{
     title: '头像',
     rightElement: (
@@ -121,7 +133,8 @@ const EditMessage = (props) => {
     title: '昵称',
     rightElement: (
       <Text style={styles.textStyle}>{user.nick_name}</Text>
-    )
+    ),
+    onPress: () => setVisible(true)
   }, {
     title: '生日',
     rightElement: (
@@ -173,6 +186,14 @@ const EditMessage = (props) => {
           titleStyle={styles.textStyle}
         />
       ))}
+      <Overlay visible={visible} onBackdropPress={() => setVisible(false)}>
+        <TextInput
+          placeholder="修改昵称"
+          // value={nickName}
+          onSubmitEditing={updateNickName}
+          style={{ width: pxToDp(300) }}
+        />
+      </Overlay>
     </View>
   );
 }

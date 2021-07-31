@@ -104,13 +104,14 @@ const My = (props) => {
           showCity
           nickNameStyle={{ color: '#FFF' }}
           genAgeWrapStyle={{ backgroundColor: '#FFF', paddingHorizontal: pxToDp(5), borderRadius: pxToDp(20) }}
+          style={{ flex: 1 }}
         />
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => context.navigate('EditMessage')}
           style={styles.editIcon}
         >
-          <Icon type="iconbianji" size={pxToDp(18)} color="#FFFFFF" />
+          <Icon  style={styles.editIcon} type="iconbianji" size={pxToDp(18)} color="#FFFFFF" />
         </TouchableOpacity>
       </View>
       <View style={{justifyContent: 'center', alignItems: 'center' }}>
