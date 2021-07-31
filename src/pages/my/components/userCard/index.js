@@ -14,6 +14,7 @@ const defaultUser = {
   marry: '未婚',
   xueli: '本科',
   agediff: 3,
+  city: '',
 }
 
 const DynamicCard = (props) => {
@@ -28,19 +29,6 @@ const DynamicCard = (props) => {
     genAgeWrapStyle,
     style,
   } = props;
-  const [city, setCity] = useState();
-
-  useEffect(() => {
-    getCityByLocation();
-  }, [])
-
-  /**
-   * 获取当前定位信息
-   */
-  const getCityByLocation = async() => {
-    const res = await Geo.getCityByLocation();
-    setCity(res.regeocode.addressComponent.city);
-  }
 
   return (
     <View style={[styles.container, style]}>
@@ -70,7 +58,7 @@ const DynamicCard = (props) => {
           showCity ? (
             <View style={styles.cityWrap}>
               <Icon type='iconlocation' color={cityIconColor || '#FFF'} size={pxToDp(14)} />
-              <Text style={[styles.cityText, cityTextStyle]}>{city}</Text>
+              <Text style={[styles.cityText, cityTextStyle]}>{user.city}</Text>
             </View>
           ) : (
           <View style={{ flexDirection: 'row' }}>

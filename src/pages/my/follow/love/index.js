@@ -11,25 +11,25 @@ const Love = (props) => {
 
   const [inputValue, setInputValue] = useState();
 
-  // const rightExtra = () => {
-  //   return (
-  //     <Icon
-  //       type="iconxihuan"
-  //       size={40}
-  //       color='red'
-  //       style={styles.likeIcon}
-  //     />
-  //   );
-  // }
-
   const rightExtra = () => {
     return (
-      <TouchableOpacity activeOpacity={0.8} style={styles.eachLikeWrap}>
-        <Icon type="iconjia" size={pxToDp(16)} color="#666" />
-        <Text style={styles.textStyle}>已关注</Text>
-      </TouchableOpacity>
+      <Icon
+        type="iconxihuan"
+        size={40}
+        color='red'
+        style={styles.likeIcon}
+      />
     );
   }
+
+  // const rightExtra = () => {
+  //   return (
+  //     <TouchableOpacity activeOpacity={0.8} style={styles.eachLikeWrap}>
+  //       <Icon type="iconjia" size={pxToDp(16)} color="#666" />
+  //       <Text style={styles.textStyle}>已关注</Text>
+  //     </TouchableOpacity>
+  //   );
+  // }
 
   // 搜索输入框改变事件
   const handleChange = (text) => {
@@ -37,7 +37,7 @@ const Love = (props) => {
   }
 
   // 搜索功能过滤
-  const listData = data.filter(user => user.nick_name.includes(inputValue));
+  const listData = inputValue ? data.filter(user => user.nick_name.includes(inputValue)) : data;
 
   return (
     <View style={styles.container}>

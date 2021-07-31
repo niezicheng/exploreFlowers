@@ -7,7 +7,6 @@ import Icon from '../../components/Icon';
 import { pxToDp } from '../../utils/stylesKits';
 import UserCard from './components/userCard';
 import ItemCard from './components/itemCard';
-import Geo from '../../utils/Geo';
 import { MY_COUNTS } from '../../utils/pathMap';
 import request from '../../utils/request';
 import styles from './style';
@@ -21,7 +20,6 @@ const My = (props) => {
     loveCount: 0, // 喜欢数量
     eachLoveCount: 0, // 相互关注数量
   });
-
   const [refreshing, setRefreshing] = useState(false);
 
   const data = [{
@@ -58,7 +56,7 @@ const My = (props) => {
 
   useEffect(() => {
     getMyCount();
-  }, [])
+  }, []);
 
   /**
    * 获取关注、喜欢和粉丝等信息数量
