@@ -50,7 +50,7 @@ const My = (props) => {
     title: '通用设置',
     iconType: 'iconshezhi',
     iconColor: 'purple',
-    onPress: () => context.navigate('Trends')
+    onPress: () => context.navigate('Setting')
   }, {
     title: '客服在线',
     iconType: 'iconkefu',
@@ -62,6 +62,10 @@ const My = (props) => {
     getMyCount();
   }, []);
 
+  React.useEffect(() => {
+    console.log('useEffect==========')
+    }, [])
+
   /**
    * 获取关注、喜欢和粉丝等信息数量
    */
@@ -70,7 +74,6 @@ const My = (props) => {
     const res = await request.privateGet(MY_COUNTS);
 
     if (res && res.code === '10000') {
-      console.log(res)
       setCountObj({
         fanCount: res.data[0].cout,
         loveCount: res.data[1].cout,

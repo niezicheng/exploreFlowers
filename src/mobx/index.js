@@ -17,6 +17,13 @@ class RootStore {
     this.token = token;
     this.userId = userId;
   }
+
+  // 清除 token
+  @action clearUserInfo() {
+    this.mobile = '';
+    this.token = '';
+    this.userId = '';
+  }
 }
 
 export default new RootStore();

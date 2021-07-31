@@ -12,7 +12,7 @@ import My from './pages/my';
 import JMessage from './utils/JMessage';
 
 const TabBar = (props) => {
-  let selectTab = 'my';
+  let selectTab = 'friend';
   if (props.route.params && props.route.params.pagename) {
     selectTab = props.route.params.pagename;
   }

@@ -65,9 +65,14 @@ const Login = (props) => {
     if (res.data.isNew) {
       // 新用户
       props.navigation.navigate('UserInfo');
+
     } else {
-      // 老用户
-      props.navigation.navigate('Tabbar');
+      // 老用户, 使用 navigate 当之前页面进栈后再次跳转到之前页面 componentDidMount 和 Effect 不会执行
+      // props.navigation.navigate('Tabbar');
+
+      props.navigation.reset({
+        routes: [{ name: 'Tabbar' }]
+      });
     }
 
     // 清除计时器

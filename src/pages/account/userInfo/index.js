@@ -203,7 +203,11 @@ const UserInfo = (props) => {
     Toast.smile('恭喜，操作成功!', 2000, 'center');
     // 跳转 交友页面
     setTimeout(() => {
-      props.navigation.navigate('Tabbar');
+      // props.navigation.navigate('Tabbar');
+
+      props.navigation.reset({
+        routes: [{ name: 'Tabbar' }]
+      });
     }, 2000);
 
   }

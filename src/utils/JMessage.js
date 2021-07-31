@@ -32,6 +32,9 @@ export default {
     })
   },
 
+  // 登出
+  logout: JMessage.logout,
+
   /**
    * 发动文本消息
    * @param {string} username 接收信息的对象

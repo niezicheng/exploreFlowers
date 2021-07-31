@@ -18,6 +18,7 @@ import Follow from './pages/my/follow';
 import Trends from './pages/my/trends';
 import Visitors from './pages/my/visitors';
 import EditMessage from './pages/my/editMessage';
+import Setting from './pages/my/setting';
 
 import Tabbar from './tabbar';
 
@@ -32,6 +33,7 @@ function Nav(props) {
     <NavigationContainer>
       <Stack.Navigator headerMode="none" initialRouteName={initRouteName}>
         <Stack.Screen name="Tabbar" component={Tabbar} />
+        <Stack.Screen name="Setting" component={Setting} />
         <Stack.Screen name="EditMessage" component={EditMessage} />
         <Stack.Screen name="Visitors" component={Visitors} />
         <Stack.Screen name="Trends" component={Trends} />
