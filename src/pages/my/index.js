@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StatusBar, ScrollView, RefreshControl } from 'react-native';
+import { View, StatusBar, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { ListItem } from 'react-native-elements';
 import { NavigationContext } from '@react-navigation/native';
@@ -105,7 +105,13 @@ const My = (props) => {
           nickNameStyle={{ color: '#FFF' }}
           genAgeWrapStyle={{ backgroundColor: '#FFF', paddingHorizontal: pxToDp(5), borderRadius: pxToDp(20) }}
         />
-        <Icon type="iconbianji" size={pxToDp(18)} color="#FFFFFF" style={styles.editIcon} />
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => context.navigate('EditMessage')}
+          style={styles.editIcon}
+        >
+          <Icon type="iconbianji" size={pxToDp(18)} color="#FFFFFF" />
+        </TouchableOpacity>
       </View>
       <View style={{justifyContent: 'center', alignItems: 'center' }}>
         <ItemCard
