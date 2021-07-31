@@ -40,18 +40,22 @@ const My = (props) => {
     title: '我的动态',
     iconType: 'icondongtai',
     iconColor: 'green',
+    onPress: () => context.navigate('Trends')
   }, {
     title: '谁看过我',
     iconType: 'iconshuikanguowo',
     iconColor: 'red',
+    onPress: () => context.navigate('Trends')
   }, {
     title: '通用设置',
     iconType: 'iconshezhi',
     iconColor: 'purple',
+    onPress: () => context.navigate('Trends')
   }, {
     title: '客服在线',
     iconType: 'iconkefu',
     iconColor: 'blue',
+    onPress: () => context.navigate('Trends')
   }];
 
   useEffect(() => {
@@ -118,6 +122,7 @@ const My = (props) => {
             titleStyle={{ color: '#666' }}
             bottomDivider={i !== contentData.length - 1}
             chevron
+            onPress={v.onPress}
           />
         ))}
       </View>

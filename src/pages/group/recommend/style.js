@@ -4,7 +4,7 @@ import { pxToDp } from '../../../utils/stylesKits';
 export default StyleSheet.create({
   container: {
     padding: pxToDp(15),
-    borderBottomColor: '#eee',
+    borderBottomColor: '#E5E5E5',
     borderBottomWidth: pxToDp(1),
   },
 

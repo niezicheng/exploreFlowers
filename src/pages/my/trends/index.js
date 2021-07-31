@@ -2,19 +2,20 @@ import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { NavigationContext } from '@react-navigation/native';
+import NavHeader from '../../../components/NavHeader';
 import Icon from '../../../components/Icon';
 import LoadingText from '../../../components/loadingText';
 import request from '../../../utils/request';
-import { QZ_ZXDT, QZ_DT_DZ  } from '../../../utils/pathMap';
+import { QZ_DT_DZ, MY_TRENDS  } from '../../../utils/pathMap';
 import { pxToDp } from '../../../utils/stylesKits';
 import Toast from '../../../utils/Toast';
 import JMessage from '../../../utils/JMessage';
-import DynamicCard from '../components/dynamicCard';
+import DynamicCard from '../../group/components/dynamicCard';
 import styles from './style';
 
-
-const Recommend = (props) => {
+const Trends = (props) => {
   const context = useContext(NavigationContext);
+  const { user } = props.UserStore;
 
   const [params, setParams] = useState({
     page: 1,
@@ -34,43 +35,12 @@ const Recommend = (props) => {
 
   // 获取展示的数据信息
   const getList = async(paramsData, prevListData) => {
-    const res = await request.privateGet(QZ_ZXDT, paramsData || params);
+    const res = await request.privateGet(MY_TRENDS, paramsData || params);
     if (res.code === '10000') {
       const prevData = prevListData || listData
       setListData([ ...prevData, ...res.data ]);
       setTotalPages(res.pages);
       setIsLoading(false);
-    }
-  }
-
-  // 点赞图标点击事件
-  const handleStar = async (user, index) => {
-    // 1、发送点赞接口请求获取返回值：点赞成功还是去取消点赞
-    const { tid, guid } = user;
-    const url = QZ_DT_DZ.replace(':id', tid);
-    setCurrentUserIndex(index);
-    const res = await request.privateGet(url);
-
-    if (res && res.code === '10000') {
-      if (res.data.iscancelstar) {
-        // 取消点赞
-        Toast.message('取消成功', 500, 'center');
-        setStarColor('#666');
-      } else {
-        // 点赞成功
-        Toast.smile('点赞成功');
-        setStarColor('#FEAB00');
-
-        // 2、点赞成功通过极光通讯发送点赞信息
-        const text = `${props.UserStore.user.nick_name} 点赞了你的动态`;
-        const extras = { user: JSON.stringify(props.UserStore.user) }
-        JMessage.sendTextMessage(guid, text, extras);
-      }
-
-      // 3、重新发送请求获取列表数据
-      setParams({ ...params, page: 1 });
-      // 注意重置 listData 数据需要将其作为函数参数传递，使用 setListData 异步赋值延时
-      getList({ ...params, page: 1 }, []);
     }
   }
 
@@ -85,18 +55,15 @@ const Recommend = (props) => {
       <View style={styles.container}>
         <DynamicCard
           user={item}
+          owner={user}
           isRenderRichText
           handelMore={false}
         />
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => handleStar(item, index)}
-            style={{ flexDirection: 'row', alignItems: 'center' }}
-          >
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Icon type="icondianzan-o" size={18} color={currentUserIndex === index ? starColor : '#666'} />
             <Text style={{ color: currentUserIndex === index ? starColor : '#666', marginLeft: pxToDp(2) }}>{item.star_count}</Text>
-          </TouchableOpacity>
+          </View>
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => goToComment(item)}
@@ -134,14 +101,21 @@ const Recommend = (props) => {
   }
 
   return (
-    <FlatList
-      data={listData}
-      keyExtractor={(item, index) => `${item.tid}-${index}`}
-      renderItem={renderItem}
-      onEndReachedThreshold={0.1}
-      onEndReached={onEndReached}
-    />
+    <>
+      <NavHeader
+        title="我的动态"
+        isShowBackText={false}
+      />
+      <FlatList
+        data={listData}
+        keyExtractor={(item, index) => `${item.tid}-${index}`}
+        renderItem={renderItem}
+        onEndReachedThreshold={0.1}
+        onEndReached={onEndReached}
+      />
+    </>
   );
 }
 
-export default inject('UserStore')(observer(Recommend));
+export default inject('UserStore')(observer(Trends));
+

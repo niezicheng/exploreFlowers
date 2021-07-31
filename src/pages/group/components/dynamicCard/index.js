@@ -12,6 +12,7 @@ import styles from './style';
 const DynamicCard = (props) => {
   const {
     user,
+    owner,
     isRenderRichText,
     handelMore,
     style,
@@ -56,26 +57,26 @@ const DynamicCard = (props) => {
     <View style={style}>
       <View style={styles.header}>
         <Image
-          source={{ uri: `${BASE_URI}${user.header}` }}
+          source={{ uri: `${BASE_URI}${owner ? owner.header : user.header}` }}
           style={styles.avatar}
         />
         <View style={styles.headerRight}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: pxToDp(10) }}>
-            <Text style={[styles.textColor, { fontWeight: 'bold'}]}>{user.nick_name}</Text>
+            <Text style={[styles.textColor, { fontWeight: 'bold'}]}>{owner ? owner.nick_name : user.nick_name}</Text>
             <Icon
               type={user.gender === '男' ? 'icontanhuanan' : 'icontanhuanv'}
               color={user.gender === '男' ? 'red' : '#b564bf'}
               size={18}
               style={styles.genderIcon}
             />
-            <Text style={[styles.textColor, { fontWeight: 'bold', }]}>{`${user.age}岁`}</Text>
+            <Text style={[styles.textColor, { fontWeight: 'bold', }]}>{`${owner ? owner.age : user.age}岁`}</Text>
           </View>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.textColor}>{user.marry}</Text>
+            <Text style={styles.textColor}>{owner ? owner.marry : user.marry}</Text>
             <Text style={styles.textColor}> | </Text>
-            <Text style={styles.textColor}>{user.xueli}</Text>
+            <Text style={styles.textColor}>{owner ? owner.xueli : user.xueli}</Text>
             <Text style={styles.textColor}> | </Text>
-            <Text style={styles.textColor}>{user.agediff < 10 ? '年龄相仿' : '有点代沟'}</Text>
+            <Text style={styles.textColor}>{(owner ? owner.agediff : user.agediff) < 10 ? '年龄相仿' : '有点代沟'}</Text>
           </View>
         </View>
         {handelMore && (

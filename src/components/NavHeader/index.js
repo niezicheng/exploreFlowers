@@ -9,6 +9,7 @@ const NavHeader = (props) => {
     title = '标题',
     leftExtra = '返回',
     rightExtra,
+    isShowBackText = true,
     leftOnPress,
     rightOnPress,
     backTextStyle,
@@ -42,7 +43,9 @@ const NavHeader = (props) => {
         {leftExtra && isValidElement(leftExtra) ? leftExtra : (
           <TouchableOpacity onPress={handleGoBack} activeOpacity={0.8} style={styles.leftWrap}>
             <Icon type='iconfanhui' color='#fff' size={20} />
-            <Text style={[styles.textStyle, backTextStyle]}>{leftExtra}</Text>
+            {isShowBackText && (
+              <Text style={[styles.textStyle, backTextStyle]}>{leftExtra}</Text>
+            )}
           </TouchableOpacity>
         )}
         <Text style={[styles.textStyle, styles.title, titleTextStyle]}>{title}</Text>

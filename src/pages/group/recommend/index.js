@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { ActionSheet } from 'teaset';
 import { inject, observer } from 'mobx-react';
 import { NavigationContext } from '@react-navigation/native';

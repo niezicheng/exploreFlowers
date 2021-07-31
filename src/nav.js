@@ -15,6 +15,7 @@ import Chat from './pages/message/chat';
 import Comment from './pages/group/recommend/comment';
 import Publish from './pages/group/recommend/publish';
 import Follow from './pages/my/follow';
+import Trends from './pages/my/trends';
 
 import Tabbar from './tabbar';
 
@@ -29,6 +30,7 @@ function Nav(props) {
     <NavigationContainer>
       <Stack.Navigator headerMode="none" initialRouteName={initRouteName}>
         <Stack.Screen name="Tabbar" component={Tabbar} />
+        <Stack.Screen name="Trends" component={Trends} />
         <Stack.Screen name="Follow" component={Follow} />
         <Stack.Screen name="Comment" component={Comment} />
         <Stack.Screen name="Publish" component={Publish} />
