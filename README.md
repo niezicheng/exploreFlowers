@@ -33,20 +33,20 @@ npm run android
 交友、圈子、消息、我的
 
 <div align="center">
-  <img src="https://terminus-paas.oss-cn-hangzhou.aliyuncs.com/pmp/attachments/file-63048679-9379-41b3-90fc-a298ed9a97bb.png" alt="friend" height="330" width="190" >
-  <img src="https://terminus-paas.oss-cn-hangzhou.aliyuncs.com/pmp/attachments/file-947efbbf-7991-4371-a888-0fca009bc8a5.png" alt="group" height="330" width="190" >
-  <img src="https://terminus-paas.oss-cn-hangzhou.aliyuncs.com/pmp/attachments/file-13eb1494-bc35-436b-a544-e34f5465b296.png" alt="message" height="330" width="190" >
-  <img src="https://terminus-paas.oss-cn-hangzhou.aliyuncs.com/pmp/attachments/file-4b44a0a7-f4a7-41d6-a972-3a0dc5f76eb9.png" alt="my" height="330" width="190" >
+  <img src="https://terminus-paas.oss-cn-hangzhou.aliyuncs.com/pmp/attachments/file-63048679-9379-41b3-90fc-a298ed9a97bb.png" height="330" width="190" >
+  <img src="https://terminus-paas.oss-cn-hangzhou.aliyuncs.com/pmp/attachments/file-947efbbf-7991-4371-a888-0fca009bc8a5.png" height="330" width="190" >
+  <img src="https://terminus-paas.oss-cn-hangzhou.aliyuncs.com/pmp/attachments/file-13eb1494-bc35-436b-a544-e34f5465b296.png" height="330" width="190" >
+  <img src="https://terminus-paas.oss-cn-hangzhou.aliyuncs.com/pmp/attachments/file-4b44a0a7-f4a7-41d6-a972-3a0dc5f76eb9.png" height="330" width="190" >
 </div>
 
 
 搜附近、测灵魂、发布动态、退出登录
 
 <div align="center">
-  <img src="https://terminus-paas.oss-cn-hangzhou.aliyuncs.com/pmp/attachments/file-4f810564-ac3b-4656-a699-a4ba7dd5001a.png" alt="near" height="330" width="190" >
-  <img src="https://terminus-paas.oss-cn-hangzhou.aliyuncs.com/pmp/attachments/file-42e946e5-e556-4402-9d83-6064891c4970.png" alt="soul" height="330" width="190" >
-  <img src="https://terminus-paas.oss-cn-hangzhou.aliyuncs.com/pmp/attachments/file-0fb5c9f5-59f8-4dd0-8cc9-abdf8fcd4fa5.png" alt="publish" height="330" width="190" >
-  <img src="https://terminus-paas.oss-cn-hangzhou.aliyuncs.com/pmp/attachments/file-ba020042-98ae-44be-b05d-d36f14fde094.png" alt="logout" height="330" width="190" >
+  <img src="https://terminus-paas.oss-cn-hangzhou.aliyuncs.com/pmp/attachments/file-4f810564-ac3b-4656-a699-a4ba7dd5001a.png" height="330" width="190" >
+  <img src="https://terminus-paas.oss-cn-hangzhou.aliyuncs.com/pmp/attachments/file-42e946e5-e556-4402-9d83-6064891c4970.png" height="330" width="190" >
+  <img src="https://terminus-paas.oss-cn-hangzhou.aliyuncs.com/pmp/attachments/file-0fb5c9f5-59f8-4dd0-8cc9-abdf8fcd4fa5.png" height="330" width="190" >
+  <img src="https://terminus-paas.oss-cn-hangzhou.aliyuncs.com/pmp/attachments/file-ba020042-98ae-44be-b05d-d36f14fde094.png" height="330" width="190" >
 </div>
 
 
